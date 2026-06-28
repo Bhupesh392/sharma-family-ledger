@@ -17,7 +17,7 @@ export function MiscFormFields({
 }) {
   return (
     <>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <FormField label="Date" htmlFor="date">
           <Input
             id="date"
@@ -40,7 +40,7 @@ export function MiscFormFields({
         </FormField>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <FormField label="To whom" htmlFor="toWhom">
           <Input id="toWhom" name="toWhom" defaultValue={defaultValues?.toWhom} required />
         </FormField>

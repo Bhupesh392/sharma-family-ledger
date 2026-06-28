@@ -66,10 +66,11 @@ export function EntryFormDialog({
               variant="outline"
               onClick={() => setOpen(false)}
               disabled={pending}
+              className="w-full sm:w-auto"
             >
               Cancel
             </Button>
-            <Button type="submit" variant="maroon" disabled={pending}>
+            <Button type="submit" variant="maroon" disabled={pending} className="w-full sm:w-auto">
               {pending ? "Saving…" : submitLabel}
             </Button>
           </DialogFooter>

@@ -45,60 +45,88 @@ export default async function E392RentPage() {
         }
       />
 
-      <Card className="overflow-hidden">
-        {rows.length === 0 ? (
+      {rows.length === 0 ? (
+        <Card>
           <EmptyState
             icon={Building2}
             title="No rent entries yet"
             description="Add the first rent entry to start tracking E-392 income."
           />
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="ledger-divider text-left">
-                  <th className="px-5 py-3 font-medium text-ink-soft">Month</th>
-                  <th className="px-5 py-3 font-medium text-ink-soft">Floor</th>
-                  <th className="px-5 py-3 font-medium text-ink-soft text-right">
-                    Rent
-                  </th>
-                  <th className="px-5 py-3 font-medium text-ink-soft hidden md:table-cell">
-                    Paid to
-                  </th>
-                  <th className="px-5 py-3 font-medium text-ink-soft hidden md:table-cell">
-                    Mode
-                  </th>
-                  <th className="px-5 py-3" />
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((row) => (
-                  <tr key={row.id} className="ledger-divider hover:bg-paper/60">
-                    <td className="px-5 py-3 font-medium text-ink whitespace-nowrap">
-                      {formatMonth(row.month)}
-                    </td>
-                    <td className="px-5 py-3">
+        </Card>
+      ) : (
+        <>
+          {/* Mobile: stacked cards (no horizontal scroll needed) */}
+          <div className="flex flex-col gap-3 sm:hidden">
+            {rows.map((row) => (
+              <Card key={row.id} className="p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <p className="font-medium text-ink">{formatMonth(row.month)}</p>
                       <Badge>{FLOOR_LABEL[row.floor]}</Badge>
-                    </td>
-                    <td className="px-5 py-3 text-right font-mono-num font-semibold text-credit whitespace-nowrap">
-                      {formatINR(row.rent)}
-                    </td>
-                    <td className="px-5 py-3 text-ink-soft hidden md:table-cell">
-                      {row.paidTo}
-                    </td>
-                    <td className="px-5 py-3 text-ink-soft hidden md:table-cell">
-                      {row.mode}
-                    </td>
-                    <td className="px-5 py-3">
-                      <RentRowActions row={row} isAdmin={isAdmin} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                    </div>
+                    <p className="text-xs text-ink-soft mt-1">
+                      Paid to {row.paidTo} &middot; {row.mode}
+                    </p>
+                  </div>
+                  <RentRowActions row={row} isAdmin={isAdmin} />
+                </div>
+                <p className="font-mono-num font-semibold text-credit text-lg mt-2">
+                  {formatINR(row.rent)}
+                </p>
+              </Card>
+            ))}
           </div>
-        )}
-      </Card>
+
+          {/* Tablet & up: full table */}
+          <Card className="overflow-hidden hidden sm:block">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="ledger-divider text-left">
+                    <th className="px-5 py-3 font-medium text-ink-soft">Month</th>
+                    <th className="px-5 py-3 font-medium text-ink-soft">Floor</th>
+                    <th className="px-5 py-3 font-medium text-ink-soft text-right">
+                      Rent
+                    </th>
+                    <th className="px-5 py-3 font-medium text-ink-soft hidden md:table-cell">
+                      Paid to
+                    </th>
+                    <th className="px-5 py-3 font-medium text-ink-soft hidden md:table-cell">
+                      Mode
+                    </th>
+                    <th className="px-5 py-3" />
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((row) => (
+                    <tr key={row.id} className="ledger-divider hover:bg-paper/60">
+                      <td className="px-5 py-3 font-medium text-ink whitespace-nowrap">
+                        {formatMonth(row.month)}
+                      </td>
+                      <td className="px-5 py-3">
+                        <Badge>{FLOOR_LABEL[row.floor]}</Badge>
+                      </td>
+                      <td className="px-5 py-3 text-right font-mono-num font-semibold text-credit whitespace-nowrap">
+                        {formatINR(row.rent)}
+                      </td>
+                      <td className="px-5 py-3 text-ink-soft hidden md:table-cell">
+                        {row.paidTo}
+                      </td>
+                      <td className="px-5 py-3 text-ink-soft hidden md:table-cell">
+                        {row.mode}
+                      </td>
+                      <td className="px-5 py-3">
+                        <RentRowActions row={row} isAdmin={isAdmin} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+        </>
+      )}
     </div>
   );
 }

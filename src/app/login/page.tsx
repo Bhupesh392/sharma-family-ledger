@@ -21,7 +21,7 @@ export default function LoginPage() {
         }}
       />
       <div className="relative w-full max-w-sm animate-stamp">
-        <div className="ledger-card p-8">
+        <div className="ledger-card p-6 sm:p-8">
           <div className="flex flex-col items-center gap-2 mb-6 text-center">
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-maroon text-paper-raised">
               <BookOpen className="h-6 w-6" />

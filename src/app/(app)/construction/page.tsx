@@ -39,58 +39,84 @@ export default async function ConstructionPage() {
         }
       />
 
-      <Card className="overflow-hidden">
-        {rows.length === 0 ? (
+      {rows.length === 0 ? (
+        <Card>
           <EmptyState
             icon={HardHat}
             title="No construction expenses yet"
             description="Add the first expense to start tracking the JagdishPuri construction costs."
           />
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="ledger-divider text-left">
-                  <th className="px-5 py-3 font-medium text-ink-soft">Date</th>
-                  <th className="px-5 py-3 font-medium text-ink-soft">What for</th>
-                  <th className="px-5 py-3 font-medium text-ink-soft text-right">
-                    Amount
-                  </th>
-                  <th className="px-5 py-3 font-medium text-ink-soft hidden md:table-cell">
-                    Who paid
-                  </th>
-                  <th className="px-5 py-3 font-medium text-ink-soft hidden lg:table-cell">
-                    To whom
-                  </th>
-                  <th className="px-5 py-3" />
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((row) => (
-                  <tr key={row.id} className="ledger-divider hover:bg-paper/60">
-                    <td className="px-5 py-3 text-ink-soft whitespace-nowrap">
-                      {formatDate(row.date)}
-                    </td>
-                    <td className="px-5 py-3 font-medium text-ink">{row.whatFor}</td>
-                    <td className="px-5 py-3 text-right font-mono-num font-semibold text-debit whitespace-nowrap">
-                      {formatINR(row.amount)}
-                    </td>
-                    <td className="px-5 py-3 text-ink-soft hidden md:table-cell">
-                      {row.whoPaid}
-                    </td>
-                    <td className="px-5 py-3 text-ink-soft hidden lg:table-cell">
-                      {row.toWhom ?? "—"}
-                    </td>
-                    <td className="px-5 py-3">
-                      <ConstructionRowActions row={row} isAdmin={isAdmin} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        </Card>
+      ) : (
+        <>
+          {/* Mobile: stacked cards */}
+          <div className="flex flex-col gap-3 sm:hidden">
+            {rows.map((row) => (
+              <Card key={row.id} className="p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="font-medium text-ink">{row.whatFor}</p>
+                    <p className="text-xs text-ink-soft mt-1">
+                      {formatDate(row.date)} &middot; Paid by {row.whoPaid}
+                      {row.toWhom ? ` to ${row.toWhom}` : ""}
+                    </p>
+                  </div>
+                  <ConstructionRowActions row={row} isAdmin={isAdmin} />
+                </div>
+                <p className="font-mono-num font-semibold text-debit text-lg mt-2">
+                  {formatINR(row.amount)}
+                </p>
+              </Card>
+            ))}
           </div>
-        )}
-      </Card>
+
+          {/* Tablet & up: full table */}
+          <Card className="overflow-hidden hidden sm:block">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="ledger-divider text-left">
+                    <th className="px-5 py-3 font-medium text-ink-soft">Date</th>
+                    <th className="px-5 py-3 font-medium text-ink-soft">What for</th>
+                    <th className="px-5 py-3 font-medium text-ink-soft text-right">
+                      Amount
+                    </th>
+                    <th className="px-5 py-3 font-medium text-ink-soft hidden md:table-cell">
+                      Who paid
+                    </th>
+                    <th className="px-5 py-3 font-medium text-ink-soft hidden lg:table-cell">
+                      To whom
+                    </th>
+                    <th className="px-5 py-3" />
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((row) => (
+                    <tr key={row.id} className="ledger-divider hover:bg-paper/60">
+                      <td className="px-5 py-3 text-ink-soft whitespace-nowrap">
+                        {formatDate(row.date)}
+                      </td>
+                      <td className="px-5 py-3 font-medium text-ink">{row.whatFor}</td>
+                      <td className="px-5 py-3 text-right font-mono-num font-semibold text-debit whitespace-nowrap">
+                        {formatINR(row.amount)}
+                      </td>
+                      <td className="px-5 py-3 text-ink-soft hidden md:table-cell">
+                        {row.whoPaid}
+                      </td>
+                      <td className="px-5 py-3 text-ink-soft hidden lg:table-cell">
+                        {row.toWhom ?? "—"}
+                      </td>
+                      <td className="px-5 py-3">
+                        <ConstructionRowActions row={row} isAdmin={isAdmin} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+        </>
+      )}
     </div>
   );
 }

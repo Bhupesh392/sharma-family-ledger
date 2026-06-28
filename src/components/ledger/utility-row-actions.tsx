@@ -24,7 +24,7 @@ export function UtilityRowActions({
   isAdmin: boolean;
 }) {
   return (
-    <div className="flex items-center justify-end gap-1">
+    <div className="flex items-center justify-end gap-1 shrink-0">
       <EntryFormDialog
         trigger={
           <Button variant="ghost" size="icon" aria-label="Edit entry">

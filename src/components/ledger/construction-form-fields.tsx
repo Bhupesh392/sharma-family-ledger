@@ -28,7 +28,7 @@ export function ConstructionFormFields({
         />
       </FormField>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <FormField label="Amount (₹)" htmlFor="amount">
           <Input
             id="amount"
@@ -50,7 +50,7 @@ export function ConstructionFormFields({
         </FormField>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <FormField label="Who paid?" htmlFor="whoPaid">
           <Input
             id="whoPaid"
@@ -64,7 +64,7 @@ export function ConstructionFormFields({
         </FormField>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <FormField label="Payment mode" htmlFor="mode">
           <Input
             id="mode"

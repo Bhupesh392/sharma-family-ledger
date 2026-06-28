@@ -26,7 +26,7 @@ export function ReturnItemFormFields({
 }) {
   return (
     <>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <FormField label="Category" htmlFor="category">
           <Input
             id="category"
@@ -49,7 +49,7 @@ export function ReturnItemFormFields({
         </FormField>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <FormField label="Submitted to Nitin?" htmlFor="submittedToNitin">
           <Select
             name="submittedToNitin"
@@ -78,7 +78,7 @@ export function ReturnItemFormFields({
         </FormField>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <FormField label="Who returned it?" htmlFor="whoReturned">
           <Input
             id="whoReturned"
@@ -91,7 +91,7 @@ export function ReturnItemFormFields({
         </FormField>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <FormField label="Payment mode" htmlFor="mode">
           <Input id="mode" name="mode" defaultValue={defaultValues?.mode ?? ""} />
         </FormField>
