@@ -1,0 +1,1183 @@
+{
+  "e392_ground": [
+    {
+      "month": "2025-04-01",
+      "floor": "GROUND",
+      "rent": 8863.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2025-05-01",
+      "floor": "GROUND",
+      "rent": 9103.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2025-06-01",
+      "floor": "GROUND",
+      "rent": 8348.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2025-07-01",
+      "floor": "GROUND",
+      "rent": 8669.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2025-08-01",
+      "floor": "GROUND",
+      "rent": 7516.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2025-09-01",
+      "floor": "GROUND",
+      "rent": 8272.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2025-10-01",
+      "floor": "GROUND",
+      "rent": 12166.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2025-11-01",
+      "floor": "GROUND",
+      "rent": 6000.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2025-12-01",
+      "floor": "GROUND",
+      "rent": 9588.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2026-01-01",
+      "floor": "GROUND",
+      "rent": 7292.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2026-02-01",
+      "floor": "GROUND",
+      "rent": 12211.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2026-03-01",
+      "floor": "GROUND",
+      "rent": 6500.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2026-04-01",
+      "floor": "GROUND",
+      "rent": 10366.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2026-05-01",
+      "floor": "GROUND",
+      "rent": 9202.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    }
+  ],
+  "e392_first": [
+    {
+      "month": "2025-05-01",
+      "floor": "FIRST",
+      "rent": 3000.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2025-06-01",
+      "floor": "FIRST",
+      "rent": 3000.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2025-07-01",
+      "floor": "FIRST",
+      "rent": 3000.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2025-08-01",
+      "floor": "FIRST",
+      "rent": 3000.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2025-09-01",
+      "floor": "FIRST",
+      "rent": 3000.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2025-10-01",
+      "floor": "FIRST",
+      "rent": 3000.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2025-11-01",
+      "floor": "FIRST",
+      "rent": 3000.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2025-12-01",
+      "floor": "FIRST",
+      "rent": 3000.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2026-01-01",
+      "floor": "FIRST",
+      "rent": 3000.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2026-02-01",
+      "floor": "FIRST",
+      "rent": 3000.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2026-03-01",
+      "floor": "FIRST",
+      "rent": 3000.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2026-04-01",
+      "floor": "FIRST",
+      "rent": 3000.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2026-05-01",
+      "floor": "FIRST",
+      "rent": 3000.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    }
+  ],
+  "e392_second": [
+    {
+      "month": "2025-06-01",
+      "floor": "SECOND",
+      "rent": 10000.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2025-07-01",
+      "floor": "SECOND",
+      "rent": 5000.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2025-08-01",
+      "floor": "SECOND",
+      "rent": 5000.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2025-09-01",
+      "floor": "SECOND",
+      "rent": 5000.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2025-10-01",
+      "floor": "SECOND",
+      "rent": 5000.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2025-11-01",
+      "floor": "SECOND",
+      "rent": 5000.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2025-12-01",
+      "floor": "SECOND",
+      "rent": 5000.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2026-01-01",
+      "floor": "SECOND",
+      "rent": 5000.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2026-02-01",
+      "floor": "SECOND",
+      "rent": 5000.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2026-03-01",
+      "floor": "SECOND",
+      "rent": 5000.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    },
+    {
+      "month": "2026-04-01",
+      "floor": "SECOND",
+      "rent": 550.0,
+      "paidTo": "Nitin Sharma",
+      "mode": "Online"
+    }
+  ],
+  "e392_utilities": [
+    {
+      "date": "2025-04-20",
+      "utility": "Water Bill",
+      "floor": "GROUND",
+      "paidTo": "PHED",
+      "amount": 675.0,
+      "mode": "UPI"
+    },
+    {
+      "date": "2025-04-21",
+      "utility": "Electricity Bill",
+      "floor": "GROUND",
+      "paidTo": "JVVNL",
+      "amount": 1977.0,
+      "mode": null
+    },
+    {
+      "date": "2025-05-01",
+      "utility": "Water Bill",
+      "floor": "GROUND",
+      "paidTo": "PHED",
+      "amount": 951.0,
+      "mode": "UPI"
+    },
+    {
+      "date": "2025-08-25",
+      "utility": "Electricity Bill",
+      "floor": "GROUND",
+      "paidTo": "JVVNL",
+      "amount": 2272.0,
+      "mode": "UPI"
+    },
+    {
+      "date": "2025-10-01",
+      "utility": "Electricity Bill",
+      "floor": "GROUND",
+      "paidTo": "JVVNL",
+      "amount": 1821.0,
+      "mode": "UPI"
+    }
+  ],
+  "chitrakoot_rent": [
+    {
+      "month": "2024-07-01",
+      "amount": 16000.0,
+      "paidTo": "Chetan Sharma",
+      "mode": "UPI",
+      "submittedAmount": 14917.0,
+      "submittedDate": "2024-07-06",
+      "notes": null
+    },
+    {
+      "month": "2024-08-01",
+      "amount": 16000.0,
+      "paidTo": "Chetan Sharma",
+      "mode": "UPI",
+      "submittedAmount": 10000.0,
+      "submittedDate": null,
+      "notes": "6 Aug(5000) and 13 Aug 2024(5000)"
+    },
+    {
+      "month": "2024-09-01",
+      "amount": 16000.0,
+      "paidTo": "Chetan Sharma",
+      "mode": "UPI",
+      "submittedAmount": 15000.0,
+      "submittedDate": "2024-09-04",
+      "notes": null
+    },
+    {
+      "month": "2024-10-01",
+      "amount": 16000.0,
+      "paidTo": "Chetan Sharma",
+      "mode": "UPI",
+      "submittedAmount": 10000.0,
+      "submittedDate": "2024-10-04",
+      "notes": null
+    },
+    {
+      "month": "2024-11-02",
+      "amount": 16000.0,
+      "paidTo": "Chetan Sharma",
+      "mode": "UPI",
+      "submittedAmount": null,
+      "submittedDate": null,
+      "notes": null
+    },
+    {
+      "month": "2024-12-01",
+      "amount": 16000.0,
+      "paidTo": "Chetan Sharma",
+      "mode": "UPI",
+      "submittedAmount": null,
+      "submittedDate": null,
+      "notes": null
+    },
+    {
+      "month": "2025-01-01",
+      "amount": 16000.0,
+      "paidTo": "Chetan Sharma",
+      "mode": "UPI",
+      "submittedAmount": null,
+      "submittedDate": null,
+      "notes": null
+    },
+    {
+      "month": "2025-02-01",
+      "amount": 16000.0,
+      "paidTo": "Chetan Sharma",
+      "mode": "UPI",
+      "submittedAmount": null,
+      "submittedDate": null,
+      "notes": null
+    },
+    {
+      "month": "2025-03-01",
+      "amount": 16000.0,
+      "paidTo": "Chetan Sharma",
+      "mode": "UPI",
+      "submittedAmount": 10000.0,
+      "submittedDate": "2025-03-03",
+      "notes": null
+    },
+    {
+      "month": "2025-04-01",
+      "amount": 16000.0,
+      "paidTo": "Chetan Sharma",
+      "mode": "UPI",
+      "submittedAmount": null,
+      "submittedDate": null,
+      "notes": null
+    },
+    {
+      "month": "2025-05-01",
+      "amount": 16000.0,
+      "paidTo": "Chetan Sharma",
+      "mode": "UPI",
+      "submittedAmount": 15000.0,
+      "submittedDate": "2025-05-07",
+      "notes": null
+    },
+    {
+      "month": "2025-06-01",
+      "amount": 16000.0,
+      "paidTo": "Chetan Sharma",
+      "mode": "UPI",
+      "submittedAmount": 15000.0,
+      "submittedDate": "2025-06-09",
+      "notes": null
+    },
+    {
+      "month": "2025-07-01",
+      "amount": 16000.0,
+      "paidTo": "Chetan Sharma",
+      "mode": "UPI",
+      "submittedAmount": 20000.0,
+      "submittedDate": "2025-07-07",
+      "notes": null
+    },
+    {
+      "month": "2025-08-02",
+      "amount": 16000.0,
+      "paidTo": "Chetan Sharma",
+      "mode": "UPI",
+      "submittedAmount": null,
+      "submittedDate": null,
+      "notes": null
+    },
+    {
+      "month": "2025-09-03",
+      "amount": 16000.0,
+      "paidTo": "Chetan Sharma",
+      "mode": "UPI",
+      "submittedAmount": null,
+      "submittedDate": null,
+      "notes": null
+    },
+    {
+      "month": "2025-10-01",
+      "amount": 16000.0,
+      "paidTo": "Chetan Sharma",
+      "mode": "UPI",
+      "submittedAmount": 10000.0,
+      "submittedDate": "2025-10-07",
+      "notes": null
+    },
+    {
+      "month": "2025-11-01",
+      "amount": 16000.0,
+      "paidTo": "Chetan Sharma",
+      "mode": "UPI",
+      "submittedAmount": 15000.0,
+      "submittedDate": "2025-11-07",
+      "notes": null
+    },
+    {
+      "month": "2025-12-01",
+      "amount": 16000.0,
+      "paidTo": "Chetan Sharma",
+      "mode": "UPI",
+      "submittedAmount": 15000.0,
+      "submittedDate": "2025-12-09",
+      "notes": null
+    },
+    {
+      "month": "2026-01-01",
+      "amount": 16000.0,
+      "paidTo": "Chetan Sharma",
+      "mode": "UPI",
+      "submittedAmount": 12000.0,
+      "submittedDate": "2026-01-09",
+      "notes": null
+    },
+    {
+      "month": "2026-02-01",
+      "amount": 16000.0,
+      "paidTo": "Chetan Sharma",
+      "mode": "UPI",
+      "submittedAmount": 14000.0,
+      "submittedDate": "2026-02-08",
+      "notes": null
+    },
+    {
+      "month": "2026-03-01",
+      "amount": 16000.0,
+      "paidTo": "Chetan Sharma",
+      "mode": "UPI",
+      "submittedAmount": 11000.0,
+      "submittedDate": "2006-03-05",
+      "notes": null
+    }
+  ],
+  "construction": [
+    {
+      "whatFor": "Mistri(For Jagdishpuri First Floor) - first payment",
+      "amount": 500000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Mohan Lal Saini",
+      "transactionId": "CKX065978",
+      "mode": "NEFT",
+      "date": "2023-11-29"
+    },
+    {
+      "whatFor": "Mistri",
+      "amount": 100000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Mohan Lal Saini",
+      "transactionId": "DCF5086964",
+      "mode": "NEFT",
+      "date": "2024-11-03"
+    },
+    {
+      "whatFor": "Jagdispuri Architect",
+      "amount": 50000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Suneel Sharma",
+      "transactionId": "CLC35488696",
+      "mode": "NEFT",
+      "date": "2023-08-12"
+    },
+    {
+      "whatFor": "Mistri(For Jagdishpuri First Floor) - Second payment",
+      "amount": 500000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Mohan Lal Saini",
+      "transactionId": "DAP3245819",
+      "mode": "NEFT",
+      "date": "2024-01-21"
+    },
+    {
+      "whatFor": "JagdishPuri Contractor Payment",
+      "amount": 60000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Rakesh Saini",
+      "transactionId": "508484625131",
+      "mode": "UPI",
+      "date": "2025-03-24"
+    },
+    {
+      "whatFor": "JagdishPuri Contractor Payment",
+      "amount": 25000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Rakesh Saini",
+      "transactionId": "507962272732",
+      "mode": "UPI",
+      "date": "2025-03-20"
+    },
+    {
+      "whatFor": "JagdishPuri Contractor Payment",
+      "amount": 12000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Rakesh Saini",
+      "transactionId": "507013079167",
+      "mode": "UPI",
+      "date": "2025-10-03"
+    },
+    {
+      "whatFor": "JagdishPuri Contractor Payment",
+      "amount": 100000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Rakesh Saini",
+      "transactionId": "DBB7490537",
+      "mode": "UPI",
+      "date": "2024-07-02"
+    },
+    {
+      "whatFor": "JagdishPuri Contractor Payment",
+      "amount": 70000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Rakesh Kumar",
+      "transactionId": "434770693360",
+      "mode": "UPI",
+      "date": "2024-12-12"
+    },
+    {
+      "whatFor": "JagdishPuri Contractor Payment",
+      "amount": 50000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Rakesh Kumar",
+      "transactionId": "435300696104",
+      "mode": "UPI",
+      "date": "2024-12-18"
+    },
+    {
+      "whatFor": "JagdishPuri Contractor Payment",
+      "amount": 60000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Rakesh Kumar",
+      "transactionId": "436452020186",
+      "mode": "UPI",
+      "date": "2024-12-29"
+    },
+    {
+      "whatFor": "JagdishPuri Contractor Payment",
+      "amount": 30000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Rakesh Kumar",
+      "transactionId": "500167540255",
+      "mode": "UPI",
+      "date": "2025-01-01"
+    },
+    {
+      "whatFor": "JagdishPuri Contractor Payment",
+      "amount": 50000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Rakesh Kumar",
+      "transactionId": "500589788116",
+      "mode": "UPI",
+      "date": "2025-05-01"
+    },
+    {
+      "whatFor": "JagdishPuri Contractor Payment",
+      "amount": 20000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Rakesh Kumar",
+      "transactionId": "501329943257",
+      "mode": "UPI",
+      "date": "2025-01-13"
+    },
+    {
+      "whatFor": "JagdishPuri Contractor Payment",
+      "amount": 13800.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Rakesh Kumar",
+      "transactionId": "502586066862",
+      "mode": "UPI",
+      "date": "2025-01-25"
+    },
+    {
+      "whatFor": "JagdishPuri Contractor Payment",
+      "amount": 30000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Rakesh Kumar",
+      "transactionId": "502797039199",
+      "mode": "UPI",
+      "date": "2025-01-27"
+    },
+    {
+      "whatFor": "JagdishPuri Contractor Payment",
+      "amount": 50000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Rakesh Kumar",
+      "transactionId": "5030111546558",
+      "mode": "UPI",
+      "date": "2025-01-30"
+    },
+    {
+      "whatFor": "JagdishPuri Contractor Payment",
+      "amount": 17000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Rakesh Kumar",
+      "transactionId": "510594386922",
+      "mode": "UPI",
+      "date": "2025-04-14"
+    },
+    {
+      "whatFor": "JagdishPuri Sanitary Payment",
+      "amount": 21009.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Giriraj",
+      "transactionId": null,
+      "mode": "UPI",
+      "date": "2025-03-18"
+    },
+    {
+      "whatFor": "JagdishPuri Sanitary Payment",
+      "amount": 21572.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Giriraj",
+      "transactionId": "434877662704",
+      "mode": "UPI",
+      "date": "2024-12-13"
+    },
+    {
+      "whatFor": "JagdishPuri Sanitary Payment",
+      "amount": 55806.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Giriraj taps And Tiles",
+      "transactionId": "415376634744",
+      "mode": "UPI",
+      "date": "2024-01-06"
+    },
+    {
+      "whatFor": "JagdishPuri Sanitary Payment",
+      "amount": 32666.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Giriraj taps And Tiles",
+      "transactionId": "415690597791",
+      "mode": "UPI",
+      "date": "2024-04-06"
+    },
+    {
+      "whatFor": "JagdishPuri Sanitary Payment",
+      "amount": 50000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Giriraj taps And Tiles",
+      "transactionId": "436244591257",
+      "mode": "UPI",
+      "date": "2024-12-27"
+    },
+    {
+      "whatFor": "JagdishPuri Sanitary Payment",
+      "amount": 50000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Giriraj taps And Tiles",
+      "transactionId": "436244603161",
+      "mode": "UPI",
+      "date": "2024-12-27"
+    },
+    {
+      "whatFor": "JagdishPuri Sanitary Payment",
+      "amount": 6369.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Giriraj taps And Tiles",
+      "transactionId": "436349298592",
+      "mode": "UPI",
+      "date": "2024-12-28"
+    },
+    {
+      "whatFor": "Tiles JagdishPuri",
+      "amount": 40000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Shri Sai Kripa Granities",
+      "transactionId": "414817524672",
+      "mode": "IMPS",
+      "date": "2024-05-27"
+    },
+    {
+      "whatFor": "JagdishPuri Electrical Payment",
+      "amount": 10228.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Deepak Singh Chilwal",
+      "transactionId": "50752083237",
+      "mode": "UPI",
+      "date": "2025-03-16"
+    },
+    {
+      "whatFor": "JagdishPuri Electrical Payment (Ceiling Fan & exaust)",
+      "amount": 5890.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Bhupesh Sharma",
+      "transactionId": "5074768906611",
+      "mode": "UPI",
+      "date": "2025-03-15"
+    },
+    {
+      "whatFor": "JagdishPuri Neighbour side Wall",
+      "amount": 40000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Bhargav Neighbour",
+      "transactionId": "DAZ5227905",
+      "mode": "UPI",
+      "date": "2024-01-31"
+    },
+    {
+      "whatFor": "Shri Shyam Agency",
+      "amount": 20694.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Shri Shyam Agency",
+      "transactionId": "413919827182",
+      "mode": "IMPS",
+      "date": "2024-05-18"
+    },
+    {
+      "whatFor": "JYOTI TAPS N TILES",
+      "amount": 49122.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Jyoti Taps N Tiles",
+      "transactionId": "421969847615",
+      "mode": "upi",
+      "date": "2024-06-08"
+    },
+    {
+      "whatFor": "Nihal",
+      "amount": 10000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Nihal",
+      "transactionId": "422386753956",
+      "mode": "upi",
+      "date": "2024-10-08"
+    },
+    {
+      "whatFor": "Nihal",
+      "amount": 10000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Nihal",
+      "transactionId": "422387369812",
+      "mode": "upi",
+      "date": "2024-10-08"
+    },
+    {
+      "whatFor": "Nihal",
+      "amount": 10000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Nihal",
+      "transactionId": "422699901325",
+      "mode": "upi",
+      "date": "2024-08-13"
+    },
+    {
+      "whatFor": "Nihal",
+      "amount": 10000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Nihal",
+      "transactionId": "422600165781",
+      "mode": "upi",
+      "date": "2024-08-13"
+    },
+    {
+      "whatFor": "Nihal",
+      "amount": 10000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Nihal",
+      "transactionId": "424686971316",
+      "mode": "upi",
+      "date": "2024-09-02"
+    },
+    {
+      "whatFor": "Nihal",
+      "amount": 30000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Nihal",
+      "transactionId": "427103138968",
+      "mode": "upi",
+      "date": "2024-09-27"
+    },
+    {
+      "whatFor": "M/S Shree Radha Govind rading Company",
+      "amount": 20400.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "M/S Shree Radha Govind rading Company",
+      "transactionId": "4231208666635",
+      "mode": "Upi",
+      "date": "2024-08-18"
+    },
+    {
+      "whatFor": "M/S Shree Radha Govind rading Company",
+      "amount": 8380.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "M/S Shree Radha Govind rading Company",
+      "transactionId": "423850462171",
+      "mode": "UPI",
+      "date": "2024-08-25"
+    },
+    {
+      "whatFor": "Construction expense",
+      "amount": 7000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Chetan Sharma",
+      "transactionId": "406116916460",
+      "mode": "IMPS",
+      "date": "2024-01-03"
+    },
+    {
+      "whatFor": "Building Material Jagdishpuri",
+      "amount": 10000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Chetan Sharma",
+      "transactionId": "413919836524",
+      "mode": "IMPS",
+      "date": "2024-05-18"
+    },
+    {
+      "whatFor": "Jagdishpuri Construction Material and labour",
+      "amount": 30000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Chetan Sharma",
+      "transactionId": "414711384046",
+      "mode": "IMPS",
+      "date": "2024-05-26"
+    },
+    {
+      "whatFor": "Plumber Payment",
+      "amount": 15000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Chetan Sharma",
+      "transactionId": "416710838616",
+      "mode": "IMPS",
+      "date": "2024-06-15"
+    },
+    {
+      "whatFor": "Test",
+      "amount": 100.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Chetan Sharma",
+      "transactionId": "417517752016",
+      "mode": "IMPS",
+      "date": "2024-06-23"
+    },
+    {
+      "whatFor": "TILES PAYMENT AND TILES LABOUR",
+      "amount": 100000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Chetan Sharma",
+      "transactionId": "417712318655",
+      "mode": "IMPS",
+      "date": "2024-06-25"
+    },
+    {
+      "whatFor": "Building Material Jagdishpuri",
+      "amount": 15000.0,
+      "whoPaid": "NItin Sharma",
+      "toWhom": "Chetan Sharma",
+      "transactionId": "418413148795",
+      "mode": "IMPS",
+      "date": "2024-02-07"
+    },
+    {
+      "whatFor": "PLUMBER LABOUR AND PRESSURE PUMP",
+      "amount": 20000.0,
+      "whoPaid": "NItin Sharma",
+      "toWhom": "Chetan Sharma",
+      "transactionId": "419714055712",
+      "mode": "IMPS",
+      "date": "2024-07-15"
+    },
+    {
+      "whatFor": "JAGDISHPURI TILES FINAL LABOUR AND PRESSURE PUMP",
+      "amount": 60000.0,
+      "whoPaid": "NItin Sharma",
+      "toWhom": "Chetan Sharma",
+      "transactionId": "420214003394",
+      "mode": "IMPS",
+      "date": "2024-07-20"
+    },
+    {
+      "whatFor": "JagdishPuri",
+      "amount": 27000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Chetan Sharma",
+      "transactionId": "42123425418",
+      "mode": "IMPS",
+      "date": "2024-09-27"
+    },
+    {
+      "whatFor": "Smart Solution",
+      "amount": 20000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Chetan Sharma",
+      "transactionId": "427626151230",
+      "mode": "IMPS",
+      "date": "2024-02-10"
+    },
+    {
+      "whatFor": "Smart Solution",
+      "amount": 80000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Chetan Sharma",
+      "transactionId": "429202572969",
+      "mode": "IMPS",
+      "date": "2024-10-18"
+    },
+    {
+      "whatFor": "Smart Solution",
+      "amount": 9966.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Chetan Sharma",
+      "transactionId": "430040185670",
+      "mode": "IMPS",
+      "date": "2024-10-26"
+    },
+    {
+      "whatFor": "Smart  Solution",
+      "amount": 10000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Smart Solution",
+      "transactionId": "500379341413",
+      "mode": "IMPS",
+      "date": "2025-03-01"
+    },
+    {
+      "whatFor": "Smart  Solution",
+      "amount": 11816.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Smart Solution",
+      "transactionId": "500798503317",
+      "mode": "IMPS",
+      "date": "2025-07-01"
+    },
+    {
+      "whatFor": "E-392 Paint",
+      "amount": 150000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": null,
+      "transactionId": null,
+      "mode": null,
+      "date": null
+    },
+    {
+      "whatFor": "Meena Jangir Do Shanker Lal Jangir",
+      "amount": 15000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Meena Jangir Do Shanker Lal Jangir",
+      "transactionId": "504058292242",
+      "mode": "IMPS",
+      "date": "2025-08-02"
+    },
+    {
+      "whatFor": "Furniture counters Bathroom",
+      "amount": 17000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Furniture",
+      "transactionId": "283399973335",
+      "mode": "UPI",
+      "date": "2025-04-18"
+    },
+    {
+      "whatFor": "Pressure Pump Installation",
+      "amount": 20500.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Giriraj taps And Tiles",
+      "transactionId": "524742645780",
+      "mode": "UPI",
+      "date": "2025-04-09"
+    },
+    {
+      "whatFor": "Railing Work 1st floor",
+      "amount": 6000.0,
+      "whoPaid": "Nitin Sharma",
+      "toWhom": "Narendra Jangid",
+      "transactionId": "202112975893",
+      "mode": "UPI",
+      "date": "2026-03-17"
+    }
+  ],
+  "return_items": [
+    {
+      "category": "Electrical",
+      "amount": 10025.0,
+      "submittedToNitin": "Yes",
+      "status": "COMPLETED",
+      "whoReturned": "Bhupesh Sharma",
+      "mode": "UPI",
+      "transactionId": "507712902292",
+      "date": "2025-03-18"
+    },
+    {
+      "category": "Sanitary",
+      "amount": 19740.0,
+      "submittedToNitin": "Yes",
+      "status": "COMPLETED",
+      "whoReturned": "Bhupesh Sharma",
+      "mode": "UPI",
+      "transactionId": "508402356788",
+      "date": "2025-03-25"
+    }
+  ],
+  "miscellaneous": [
+    {
+      "date": "2025-05-01",
+      "toWhom": "Narpat Singh Parihar",
+      "byWho": "Nitin Sharma",
+      "amount": 5100.0,
+      "remarks": "Advocate Fees"
+    },
+    {
+      "date": "2025-06-20",
+      "toWhom": "Ramlakhan Banjara",
+      "byWho": "Chetan Sharma",
+      "amount": 2700.0,
+      "remarks": "Shop Work"
+    },
+    {
+      "date": "2025-07-01",
+      "toWhom": "Chetan Sharma",
+      "byWho": "Nitin Sharma",
+      "amount": 19000.0,
+      "remarks": "App Subscription"
+    },
+    {
+      "date": "2025-08-05",
+      "toWhom": "Pallawi Electronics",
+      "byWho": "Chetan Sharma",
+      "amount": 13560.0,
+      "remarks": "Fan"
+    },
+    {
+      "date": "2025-08-05",
+      "toWhom": "Meharunisa",
+      "byWho": "Chetan Sharma",
+      "amount": 900.0,
+      "remarks": "4 Fan labour+ 1 Exhaust"
+    },
+    {
+      "date": "2025-08-24",
+      "toWhom": "Pankaj Verma",
+      "byWho": "Chetan Sharma",
+      "amount": 6000.0,
+      "remarks": "Shop Work"
+    },
+    {
+      "date": "2025-09-07",
+      "toWhom": "Jitendra",
+      "byWho": "Chetan Sharma",
+      "amount": 5000.0,
+      "remarks": "old Transaction"
+    },
+    {
+      "date": "2025-09-01",
+      "toWhom": "Pawan Kumar",
+      "byWho": "Chetan Sharma",
+      "amount": 4000.0,
+      "remarks": "Pressure Pump Work"
+    },
+    {
+      "date": "2025-10-01",
+      "toWhom": "Devesh Kumawat",
+      "byWho": "Bhupesh Sharma",
+      "amount": 590.0,
+      "remarks": "Hall Washroom commodes Lid word"
+    },
+    {
+      "date": "2025-10-01",
+      "toWhom": "Pushpa Devi Kumawat",
+      "byWho": "Bhupesh Sharma",
+      "amount": 2200.0,
+      "remarks": "granite work (tiles )"
+    },
+    {
+      "date": "2025-10-01",
+      "toWhom": "Amazon",
+      "byWho": "Nitin Sharma",
+      "amount": 3404.0,
+      "remarks": "Wifi Camera"
+    },
+    {
+      "date": "2025-11-01",
+      "toWhom": "Vijay Kumawat",
+      "byWho": "Bhupesh Sharma",
+      "amount": 900.0,
+      "remarks": "Papa policy Renew (CM Aaushman aarogya Bima Yojna)"
+    },
+    {
+      "date": "2025-11-01",
+      "toWhom": "Shree Shyam Mobile",
+      "byWho": "Bhupesh Sharma",
+      "amount": 900.0,
+      "remarks": "Camera SD Card"
+    },
+    {
+      "date": "2025-11-02",
+      "toWhom": "Amazon",
+      "byWho": "Nitin Sharma",
+      "amount": 4213.0,
+      "remarks": "Front Camera + Storage"
+    },
+    {
+      "date": "2025-11-03",
+      "toWhom": "Mr Lala Raam",
+      "byWho": "Bhupesh Sharma",
+      "amount": 900.0,
+      "remarks": "Camera Connection(hall+ front )"
+    },
+    {
+      "date": "2026-01-01",
+      "toWhom": "Jitendra",
+      "byWho": "Chetan Sharma",
+      "amount": 5000.0,
+      "remarks": "old Transaction"
+    },
+    {
+      "date": "2026-02-01",
+      "toWhom": "Daulat Ram Kumawat",
+      "byWho": "Chetan Sharma",
+      "amount": 4350.0,
+      "remarks": "Papa Passport"
+    }
+  ]
+}

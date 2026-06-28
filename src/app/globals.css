@@ -1,0 +1,109 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+:root {
+  /* Ledger-book palette */
+  --paper: #f6f1e4;
+  --paper-raised: #fbf8ef;
+  --ink: #1f2a1e;
+  --ink-soft: #44503f;
+  --maroon: #8b2e2e;
+  --maroon-soft: #a8453f;
+  --gold: #b8902f;
+  --sage: #5c6f58;
+  --rule: #d8cdb0;
+  --rule-strong: #c2b48c;
+  --credit: #2f6b3f;
+  --debit: #9a3030;
+
+  --background: var(--paper);
+  --foreground: var(--ink);
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-raised: var(--paper-raised);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-maroon: var(--maroon);
+  --color-maroon-soft: var(--maroon-soft);
+  --color-gold: var(--gold);
+  --color-sage: var(--sage);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-credit: var(--credit);
+  --color-debit: var(--debit);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  background-image: linear-gradient(var(--rule) 1px, transparent 1px);
+  background-size: 100% 2rem;
+  background-position: 0 4.5rem;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: var(--gold);
+  color: var(--paper);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.ledger-card {
+  background: var(--paper-raised);
+  border: 1px solid var(--rule-strong);
+  box-shadow: 0 0 0 4px var(--paper), 0 1px 2px rgba(31, 42, 30, 0.06);
+  border-radius: 0.5rem;
+}
+
+.ledger-divider {
+  border-top: 1px dashed var(--rule-strong);
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+@keyframes stamp-in {
+  0% {
+    opacity: 0;
+    transform: scale(1.04) rotate(-0.5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+
+.animate-stamp {
+  animation: stamp-in 0.22s ease-out;
+}
