@@ -55,8 +55,10 @@ export function DeleteEntryButton({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel disabled={pending}>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleConfirm} disabled={pending}>
+          <AlertDialogCancel disabled={pending} className="w-full sm:w-auto">
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction onClick={handleConfirm} disabled={pending} className="w-full sm:w-auto">
             {pending ? "Deleting…" : "Delete"}
           </AlertDialogAction>
         </AlertDialogFooter>

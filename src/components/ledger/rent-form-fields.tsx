@@ -25,7 +25,7 @@ export function RentFormFields({
 }) {
   return (
     <>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <FormField label="Month" htmlFor="month">
           <Input
             id="month"
@@ -61,7 +61,7 @@ export function RentFormFields({
         />
       </FormField>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <FormField label="Paid to" htmlFor="paidTo">
           <Input
             id="paidTo"

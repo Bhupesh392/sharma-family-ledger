@@ -19,7 +19,7 @@ export function ChitrakootFormFields({
 }) {
   return (
     <>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <FormField label="Month" htmlFor="month">
           <Input
             id="month"
@@ -42,7 +42,7 @@ export function ChitrakootFormFields({
         </FormField>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <FormField label="Paid to" htmlFor="paidTo">
           <Input
             id="paidTo"
@@ -66,7 +66,7 @@ export function ChitrakootFormFields({
         <p className="text-xs uppercase tracking-wide text-ink-soft font-medium mb-3">
           Submitted to Nitin (optional)
         </p>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <FormField label="Amount submitted (₹)" htmlFor="submittedAmount">
             <Input
               id="submittedAmount"

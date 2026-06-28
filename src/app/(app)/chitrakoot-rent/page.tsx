@@ -39,51 +39,28 @@ export default async function ChitrakootRentPage() {
         }
       />
 
-      <Card className="overflow-hidden">
-        {rows.length === 0 ? (
+      {rows.length === 0 ? (
+        <Card>
           <EmptyState
             icon={Store}
             title="No rent entries yet"
             description="Add the first entry to start tracking Chitrakoot shop rent."
           />
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="ledger-divider text-left">
-                  <th className="px-5 py-3 font-medium text-ink-soft">Month</th>
-                  <th className="px-5 py-3 font-medium text-ink-soft text-right">
-                    Rent
-                  </th>
-                  <th className="px-5 py-3 font-medium text-ink-soft text-right">
-                    Submitted
-                  </th>
-                  <th className="px-5 py-3 font-medium text-ink-soft">Status</th>
-                  <th className="px-5 py-3 font-medium text-ink-soft hidden md:table-cell">
-                    Mode
-                  </th>
-                  <th className="px-5 py-3" />
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((row) => {
-                  const rent = parseFloat(row.amount);
-                  const submitted = row.submittedAmount
-                    ? parseFloat(row.submittedAmount)
-                    : 0;
-                  const fullySubmitted = row.submittedAmount && submitted >= rent;
-                  return (
-                    <tr key={row.id} className="ledger-divider hover:bg-paper/60">
-                      <td className="px-5 py-3 font-medium text-ink whitespace-nowrap">
-                        {formatMonth(row.month)}
-                      </td>
-                      <td className="px-5 py-3 text-right font-mono-num font-semibold text-credit whitespace-nowrap">
-                        {formatINR(row.amount)}
-                      </td>
-                      <td className="px-5 py-3 text-right font-mono-num text-ink-soft whitespace-nowrap">
-                        {row.submittedAmount ? formatINR(row.submittedAmount) : "—"}
-                      </td>
-                      <td className="px-5 py-3">
+        </Card>
+      ) : (
+        <>
+          {/* Mobile: stacked cards */}
+          <div className="flex flex-col gap-3 sm:hidden">
+            {rows.map((row) => {
+              const rent = parseFloat(row.amount);
+              const submitted = row.submittedAmount ? parseFloat(row.submittedAmount) : 0;
+              const fullySubmitted = row.submittedAmount && submitted >= rent;
+              return (
+                <Card key={row.id} className="p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="font-medium text-ink">{formatMonth(row.month)}</p>
                         {row.submittedAmount ? (
                           <Badge variant={fullySubmitted ? "success" : "pending"}>
                             {fullySubmitted ? "Submitted" : "Partial"}
@@ -91,21 +68,92 @@ export default async function ChitrakootRentPage() {
                         ) : (
                           <Badge variant="pending">Not submitted</Badge>
                         )}
-                      </td>
-                      <td className="px-5 py-3 text-ink-soft hidden md:table-cell">
-                        {row.mode}
-                      </td>
-                      <td className="px-5 py-3">
-                        <ChitrakootRowActions row={row} isAdmin={isAdmin} />
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+                      </div>
+                      <p className="text-xs text-ink-soft mt-1">Mode: {row.mode}</p>
+                    </div>
+                    <ChitrakootRowActions row={row} isAdmin={isAdmin} />
+                  </div>
+                  <div className="flex items-center justify-between mt-3">
+                    <div>
+                      <p className="text-xs text-ink-soft">Rent</p>
+                      <p className="font-mono-num font-semibold text-credit">
+                        {formatINR(row.amount)}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-ink-soft">Submitted</p>
+                      <p className="font-mono-num text-ink-soft">
+                        {row.submittedAmount ? formatINR(row.submittedAmount) : "—"}
+                      </p>
+                    </div>
+                  </div>
+                </Card>
+              );
+            })}
           </div>
-        )}
-      </Card>
+
+          {/* Tablet & up: full table */}
+          <Card className="overflow-hidden hidden sm:block">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="ledger-divider text-left">
+                    <th className="px-5 py-3 font-medium text-ink-soft">Month</th>
+                    <th className="px-5 py-3 font-medium text-ink-soft text-right">
+                      Rent
+                    </th>
+                    <th className="px-5 py-3 font-medium text-ink-soft text-right">
+                      Submitted
+                    </th>
+                    <th className="px-5 py-3 font-medium text-ink-soft">Status</th>
+                    <th className="px-5 py-3 font-medium text-ink-soft hidden md:table-cell">
+                      Mode
+                    </th>
+                    <th className="px-5 py-3" />
+                  </tr>
+                </thead>
+                <tbody>
+                  {rows.map((row) => {
+                    const rent = parseFloat(row.amount);
+                    const submitted = row.submittedAmount
+                      ? parseFloat(row.submittedAmount)
+                      : 0;
+                    const fullySubmitted = row.submittedAmount && submitted >= rent;
+                    return (
+                      <tr key={row.id} className="ledger-divider hover:bg-paper/60">
+                        <td className="px-5 py-3 font-medium text-ink whitespace-nowrap">
+                          {formatMonth(row.month)}
+                        </td>
+                        <td className="px-5 py-3 text-right font-mono-num font-semibold text-credit whitespace-nowrap">
+                          {formatINR(row.amount)}
+                        </td>
+                        <td className="px-5 py-3 text-right font-mono-num text-ink-soft whitespace-nowrap">
+                          {row.submittedAmount ? formatINR(row.submittedAmount) : "—"}
+                        </td>
+                        <td className="px-5 py-3">
+                          {row.submittedAmount ? (
+                            <Badge variant={fullySubmitted ? "success" : "pending"}>
+                              {fullySubmitted ? "Submitted" : "Partial"}
+                            </Badge>
+                          ) : (
+                            <Badge variant="pending">Not submitted</Badge>
+                          )}
+                        </td>
+                        <td className="px-5 py-3 text-ink-soft hidden md:table-cell">
+                          {row.mode}
+                        </td>
+                        <td className="px-5 py-3">
+                          <ChitrakootRowActions row={row} isAdmin={isAdmin} />
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+        </>
+      )}
     </div>
   );
 }
