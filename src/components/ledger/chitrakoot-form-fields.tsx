@@ -62,8 +62,8 @@ export function ChitrakootFormFields({
         </FormField>
       </div>
 
-      <div className="ledger-divider pt-4">
-        <p className="text-xs uppercase tracking-wide text-ink-soft font-medium mb-3">
+      <div className="app-divider pt-4">
+        <p className="text-xs uppercase tracking-wide text-foreground-soft font-medium mb-3">
           Submitted to Nitin (optional)
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -5,39 +5,37 @@ import { addConstruction } from "@/lib/actions/construction";
 import { formatINR, formatDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { SectionHeader } from "@/components/ledger/section-header";
 import { EmptyState } from "@/components/ledger/empty-state";
 import { EntryFormDialog } from "@/components/ledger/entry-form-dialog";
 import { ConstructionFormFields } from "@/components/ledger/construction-form-fields";
 import { ConstructionRowActions } from "@/components/ledger/construction-row-actions";
 
-export default async function ConstructionPage() {
+export async function ConstructionPanel() {
   const [session, rows] = await Promise.all([auth(), getAllConstruction()]);
   const isAdmin = session?.user?.role === "ADMIN";
   const total = rows.reduce((acc, r) => acc + parseFloat(r.amount), 0);
 
   return (
-    <div className="flex flex-col gap-6">
-      <SectionHeader
-        title="JagdishPuri Construction"
-        description={`${rows.length} expenses logged · ${formatINR(total)} spent in total`}
-        action={
-          <EntryFormDialog
-            trigger={
-              <Button variant="maroon">
-                <Plus className="h-4 w-4" />
-                Add expense
-              </Button>
-            }
-            title="Add construction expense"
-            description="Record a new construction-related expense."
-            action={addConstruction}
-            successMessage="Expense added"
-          >
-            <ConstructionFormFields />
-          </EntryFormDialog>
-        }
-      />
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-sm text-foreground-soft">
+          {rows.length} expenses logged &middot; {formatINR(total)} spent in total on JagdishPuri construction.
+        </p>
+        <EntryFormDialog
+          trigger={
+            <Button>
+              <Plus className="h-4 w-4" />
+              Add expense
+            </Button>
+          }
+          title="Add construction expense"
+          description="Record a new construction-related expense."
+          action={addConstruction}
+          successMessage="Expense added"
+        >
+          <ConstructionFormFields />
+        </EntryFormDialog>
+      </div>
 
       {rows.length === 0 ? (
         <Card>
@@ -49,42 +47,40 @@ export default async function ConstructionPage() {
         </Card>
       ) : (
         <>
-          {/* Mobile: stacked cards */}
           <div className="flex flex-col gap-3 sm:hidden">
             {rows.map((row) => (
               <Card key={row.id} className="p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="font-medium text-ink">{row.whatFor}</p>
-                    <p className="text-xs text-ink-soft mt-1">
+                    <p className="font-medium text-foreground">{row.whatFor}</p>
+                    <p className="text-xs text-foreground-soft mt-1">
                       {formatDate(row.date)} &middot; Paid by {row.whoPaid}
                       {row.toWhom ? ` to ${row.toWhom}` : ""}
                     </p>
                   </div>
                   <ConstructionRowActions row={row} isAdmin={isAdmin} />
                 </div>
-                <p className="font-mono-num font-semibold text-debit text-lg mt-2">
+                <p className="font-mono-num font-semibold text-expense text-lg mt-2">
                   {formatINR(row.amount)}
                 </p>
               </Card>
             ))}
           </div>
 
-          {/* Tablet & up: full table */}
           <Card className="overflow-hidden hidden sm:block">
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="ledger-divider text-left">
-                    <th className="px-5 py-3 font-medium text-ink-soft">Date</th>
-                    <th className="px-5 py-3 font-medium text-ink-soft">What for</th>
-                    <th className="px-5 py-3 font-medium text-ink-soft text-right">
+                  <tr className="app-divider text-left">
+                    <th className="px-5 py-3 font-medium text-foreground-soft">Date</th>
+                    <th className="px-5 py-3 font-medium text-foreground-soft">What for</th>
+                    <th className="px-5 py-3 font-medium text-foreground-soft text-right">
                       Amount
                     </th>
-                    <th className="px-5 py-3 font-medium text-ink-soft hidden md:table-cell">
+                    <th className="px-5 py-3 font-medium text-foreground-soft hidden md:table-cell">
                       Who paid
                     </th>
-                    <th className="px-5 py-3 font-medium text-ink-soft hidden lg:table-cell">
+                    <th className="px-5 py-3 font-medium text-foreground-soft hidden lg:table-cell">
                       To whom
                     </th>
                     <th className="px-5 py-3" />
@@ -92,18 +88,18 @@ export default async function ConstructionPage() {
                 </thead>
                 <tbody>
                   {rows.map((row) => (
-                    <tr key={row.id} className="ledger-divider hover:bg-paper/60">
-                      <td className="px-5 py-3 text-ink-soft whitespace-nowrap">
+                    <tr key={row.id} className="app-divider hover:bg-surface-muted/60">
+                      <td className="px-5 py-3 text-foreground-soft whitespace-nowrap">
                         {formatDate(row.date)}
                       </td>
-                      <td className="px-5 py-3 font-medium text-ink">{row.whatFor}</td>
-                      <td className="px-5 py-3 text-right font-mono-num font-semibold text-debit whitespace-nowrap">
+                      <td className="px-5 py-3 font-medium text-foreground">{row.whatFor}</td>
+                      <td className="px-5 py-3 text-right font-mono-num font-semibold text-expense whitespace-nowrap">
                         {formatINR(row.amount)}
                       </td>
-                      <td className="px-5 py-3 text-ink-soft hidden md:table-cell">
+                      <td className="px-5 py-3 text-foreground-soft hidden md:table-cell">
                         {row.whoPaid}
                       </td>
-                      <td className="px-5 py-3 text-ink-soft hidden lg:table-cell">
+                      <td className="px-5 py-3 text-foreground-soft hidden lg:table-cell">
                         {row.toWhom ?? "—"}
                       </td>
                       <td className="px-5 py-3">

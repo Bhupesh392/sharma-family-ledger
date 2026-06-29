@@ -65,3 +65,34 @@ export const miscSchema = z.object({
   amount: z.coerce.number().positive("Amount must be greater than 0"),
   remarks: z.string().optional(),
 });
+
+export const propertyTypeValues = ["RESIDENTIAL", "SHOP"] as const;
+
+export const propertySchema = z.object({
+  name: z.string().min(1, "Required"),
+  type: z.enum(propertyTypeValues),
+  address: z.string().optional(),
+  monthlyRent: z.coerce.number().optional().nullable(),
+  imageUrl: z.string().optional(),
+  notes: z.string().optional(),
+});
+
+export const tenantSchema = z.object({
+  name: z.string().min(1, "Required"),
+  phone: z.string().optional(),
+  email: z.string().optional(),
+  notes: z.string().optional(),
+});
+
+export const tenancyStatusValues = ["ACTIVE", "ENDED"] as const;
+
+export const tenancySchema = z.object({
+  propertyId: z.coerce.number().positive("Select a property"),
+  tenantId: z.coerce.number().positive("Select a tenant"),
+  startDate: z.string().min(1, "Start date is required"),
+  endDate: z.string().optional().nullable(),
+  status: z.enum(tenancyStatusValues),
+  securityDeposit: z.coerce.number().optional().nullable(),
+  depositReturned: z.coerce.number().optional().nullable(),
+  notes: z.string().optional(),
+});

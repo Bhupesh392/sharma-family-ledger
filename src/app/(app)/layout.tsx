@@ -5,8 +5,8 @@ import { Header } from "@/components/ledger/header";
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <AuthSessionProvider>
-      <div className="flex min-h-screen w-full">
-        <aside className="hidden lg:flex lg:w-64 lg:flex-col border-r border-rule-strong bg-paper py-4 shrink-0">
+      <div className="flex min-h-screen w-full bg-background">
+        <aside className="hidden lg:flex lg:w-64 lg:flex-col border-r border-border bg-surface py-4 shrink-0">
           <Sidebar />
         </aside>
         <div className="flex flex-1 flex-col min-w-0">

@@ -1,61 +1,121 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-:root {
-  /* Ledger-book palette */
-  --paper: #f6f1e4;
-  --paper-raised: #fbf8ef;
-  --ink: #1f2a1e;
-  --ink-soft: #44503f;
-  --maroon: #8b2e2e;
-  --maroon-soft: #a8453f;
-  --gold: #b8902f;
-  --sage: #5c6f58;
-  --rule: #d8cdb0;
-  --rule-strong: #c2b48c;
-  --credit: #2f6b3f;
-  --debit: #9a3030;
+/*
+  Design system: fintech-grade property management dashboard.
+  Indigo primary, emerald secondary, soothing neutral surfaces.
+  Light + dark themes via CSS variables, toggled by next-themes
+  adding/removing the .dark class on <html>.
+*/
 
-  --background: var(--paper);
-  --foreground: var(--ink);
+:root {
+  /* Core palette */
+  --indigo: #4f46e5;
+  --indigo-soft: #6366f1;
+  --indigo-100: #e0e7ff;
+  --emerald: #10b981;
+  --emerald-soft: #34d399;
+  --emerald-100: #d1fae5;
+
+  /* Status colors */
+  --income: #10b981;
+  --expense: #f43f5e;
+  --pending: #f59e0b;
+  --paid: #10b981;
+  --overdue: #e11d48;
+
+  /* Light theme surfaces */
+  --background: #f8fafc;
+  --surface: #ffffff;
+  --surface-muted: #f1f5f9;
+  --foreground: #0f172a;
+  --foreground-soft: #475569;
+  --foreground-faint: #94a3b8;
+  --border: #e2e8f0;
+  --border-strong: #cbd5e1;
+
+  --radius-card: 16px;
+  --radius-control: 12px;
+  --shadow-soft: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 16px rgba(15, 23, 42, 0.04);
+  --shadow-raised: 0 2px 4px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+.dark {
+  --background: #0f172a;
+  --surface: #1e293b;
+  --surface-muted: #1a2436;
+  --foreground: #f1f5f9;
+  --foreground-soft: #94a3b8;
+  --foreground-faint: #64748b;
+  --border: #334155;
+  --border-strong: #475569;
+
+  --indigo: #6366f1;
+  --indigo-soft: #818cf8;
+  --indigo-100: #312e81;
+  --emerald: #34d399;
+  --emerald-soft: #6ee7b7;
+  --emerald-100: #064e3b;
+
+  --income: #34d399;
+  --expense: #fb7185;
+  --pending: #fbbf24;
+  --paid: #34d399;
+  --overdue: #fb7185;
+
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.2), 0 4px 16px rgba(0, 0, 0, 0.24);
+  --shadow-raised: 0 2px 4px rgba(0, 0, 0, 0.24), 0 8px 24px rgba(0, 0, 0, 0.32);
 }
 
 @theme inline {
-  --color-paper: var(--paper);
-  --color-paper-raised: var(--paper-raised);
-  --color-ink: var(--ink);
-  --color-ink-soft: var(--ink-soft);
-  --color-maroon: var(--maroon);
-  --color-maroon-soft: var(--maroon-soft);
-  --color-gold: var(--gold);
-  --color-sage: var(--sage);
-  --color-rule: var(--rule);
-  --color-rule-strong: var(--rule-strong);
-  --color-credit: var(--credit);
-  --color-debit: var(--debit);
   --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
   --color-foreground: var(--foreground);
-  --font-display: var(--font-fraunces);
+  --color-foreground-soft: var(--foreground-soft);
+  --color-foreground-faint: var(--foreground-faint);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
+  --color-indigo: var(--indigo);
+  --color-indigo-soft: var(--indigo-soft);
+  --color-indigo-100: var(--indigo-100);
+  --color-emerald: var(--emerald);
+  --color-emerald-soft: var(--emerald-soft);
+  --color-emerald-100: var(--emerald-100);
+
+  --color-income: var(--income);
+  --color-expense: var(--expense);
+  --color-pending: var(--pending);
+  --color-paid: var(--paid);
+  --color-overdue: var(--overdue);
+
+  --font-display: var(--font-lexend);
   --font-sans: var(--font-inter);
   --font-mono: var(--font-jetbrains);
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
-  background-image: linear-gradient(var(--rule) 1px, transparent 1px);
-  background-size: 100% 2rem;
-  background-position: 0 4.5rem;
 }
 
 * {
   -webkit-tap-highlight-color: transparent;
 }
 
+html {
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
 ::selection {
-  background: var(--gold);
-  color: var(--paper);
+  background: var(--indigo-100);
+  color: var(--indigo);
 }
 
 .font-display {
@@ -67,21 +127,35 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-.ledger-card {
-  background: var(--paper-raised);
-  border: 1px solid var(--rule-strong);
-  box-shadow: 0 0 0 4px var(--paper), 0 1px 2px rgba(31, 42, 30, 0.06);
-  border-radius: 0.5rem;
+/* Card surface: soft shadow, 16px radius, subtle border */
+.app-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-soft);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
 }
 
-.ledger-divider {
-  border-top: 1px dashed var(--rule-strong);
+.app-card-hover:hover {
+  box-shadow: var(--shadow-raised);
+  border-color: var(--border-strong);
+}
+
+.app-divider {
+  border-top: 1px solid var(--border);
+}
+
+/* Glassmorphism — used sparingly: top bar, mobile drawer overlay only */
+.glass-surface {
+  background: color-mix(in srgb, var(--surface) 72%, transparent);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
 }
 
 :focus-visible {
-  outline: 2px solid var(--gold);
+  outline: 2px solid var(--indigo);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: 4px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -93,17 +167,30 @@ body {
   }
 }
 
-@keyframes stamp-in {
+@keyframes fade-rise {
   0% {
     opacity: 0;
-    transform: scale(1.04) rotate(-0.5deg);
+    transform: translateY(4px);
   }
   100% {
     opacity: 1;
-    transform: scale(1) rotate(0);
+    transform: translateY(0);
   }
 }
 
-.animate-stamp {
-  animation: stamp-in 0.22s ease-out;
+.animate-fade-rise {
+  animation: fade-rise 0.18s ease-out;
+}
+
+/* Sparkline watermark — the signature motif: a faint oversized version
+   of each KPI card's own trend line, anchored bottom-right. */
+.sparkline-watermark {
+  position: absolute;
+  right: -8px;
+  bottom: -8px;
+  opacity: 0.08;
+  pointer-events: none;
+}
+.dark .sparkline-watermark {
+  opacity: 0.14;
 }

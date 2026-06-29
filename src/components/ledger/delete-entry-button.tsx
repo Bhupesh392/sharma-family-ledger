@@ -43,7 +43,7 @@ export function DeleteEntryButton({
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
         <Button variant="ghost" size="icon" aria-label="Delete entry">
-          <Trash2 className="h-4 w-4 text-debit" />
+          <Trash2 className="h-4 w-4 text-expense" />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>

@@ -1,32 +1,28 @@
 import { auth } from "@/lib/auth";
-import { Badge } from "@/components/ui/badge";
+import { getNotifications } from "@/lib/data";
 import { MobileNav } from "./mobile-nav";
-import { SignOutButton } from "./sign-out-button";
+import { SearchBar } from "./search-bar";
+import { NotificationsMenu } from "./notifications-menu";
+import { ProfileMenu } from "./profile-menu";
+import { ThemeToggle } from "./theme-toggle";
 
 export async function Header() {
-  const session = await auth();
+  const [session, notifications] = await Promise.all([auth(), getNotifications()]);
   const user = session?.user;
 
   return (
-    <header className="flex items-center justify-between gap-3 border-b border-rule-strong bg-paper-raised/80 backdrop-blur-sm px-4 py-3 lg:px-8">
-      <div className="flex items-center gap-2">
+    <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-border glass-surface px-4 py-3 lg:px-8">
+      <div className="flex items-center gap-3 flex-1 min-w-0">
         <MobileNav />
-        <p className="font-display text-lg font-semibold text-ink lg:hidden">
-          Sharma Ledger
+        <p className="font-display text-base font-semibold text-foreground lg:hidden">
+          Sharma Estates
         </p>
+        <SearchBar />
       </div>
-      <div className="flex items-center gap-3">
-        {user && (
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-ink-soft hidden sm:inline">
-              {user.name}
-            </span>
-            <Badge variant={user.role === "ADMIN" ? "admin" : "default"}>
-              {user.role === "ADMIN" ? "Admin" : "Member"}
-            </Badge>
-          </div>
-        )}
-        <SignOutButton />
+      <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <ThemeToggle />
+        <NotificationsMenu notifications={notifications} />
+        {user && <ProfileMenu name={user.name ?? "Account"} role={user.role} />}
       </div>
     </header>
   );

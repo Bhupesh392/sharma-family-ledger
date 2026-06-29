@@ -1,43 +1,55 @@
-# Sharma Family Ledger
+# Sharma Estates — Family Property Ledger
 
-A simple, modern web app for recording rent and expenses for the family
-properties — replacing the old `Spends_Master_File.xlsx` spreadsheet.
+A modern property-management dashboard for the family's rental properties —
+tracking rent, expenses, tenants, deposits, and occupancy, with a fintech-grade
+look and light/dark mode.
 
-Everyone in the family can **view everything** and **add/edit entries**.
-Only the **admin** account can **delete** entries.
+Everyone can **view everything** and **add/edit entries**. Only the
+**admin** account can **delete** entries.
 
 ---
 
 ## What's inside
 
-| Section | What it tracks |
+| Area | What it covers |
 |---|---|
-| **E-392 Rent** | Monthly rent from the Ground, First, and Second floor tenants |
-| **E-392 Utilities** | Water, electricity, and other utility bills for the building |
-| **Chitrakoot Shop Rent** | Shop rent, plus how much of it has been submitted to Nitin |
-| **JagdishPuri Construction** | Construction-related expenses |
-| **Return Items** | Items/materials returned and their refund status |
-| **Miscellaneous** | Any other one-off expense |
+| **Dashboard** | KPI cards (income, expenses, net profit, outstanding rent, occupancy), income vs. expense trend, expense breakdown |
+| **Properties** | Grid/list view of every rental unit, occupancy status, current tenant, monthly rent |
+| **Tenants** | Tenant directory, current property, tenancy history, security deposits |
+| **Income** | E-392 Rent and Chitrakoot Shop Rent (tabbed) |
+| **Expenses** | Utilities, Construction, Miscellaneous, Return Items (tabbed) |
+| **Reports** | 12-month trend, property profitability, expense breakdown, tenant payment behaviour |
+| **Documents** | Placeholder for future rent-agreement / receipt storage |
+| **Settings** | Theme preference, your account, and (admin) the family member list |
 
-The dashboard ("Overview") shows totals and recent activity across all
-of the above.
+Occupancy is **derived automatically** — a property is "occupied" whenever
+it has a tenancy marked `ACTIVE`; there's no manual toggle to keep in sync.
 
 ## Tech stack
 
-- **Next.js 16** (App Router, Server Actions, Turbopack) — modern, fast,
-  and the natural fit for Vercel hosting.
+- **Next.js 16** (App Router, Server Actions, Turbopack), all data pages
+  rendered dynamically (`force-dynamic`) since they're always behind login
+  and always reading live data.
 - **TypeScript** throughout.
-- **Postgres** (works great with [Neon](https://neon.tech)'s free tier,
-  or Vercel Postgres) via **Drizzle ORM** — lightweight, no native
-  binaries to manage, easy to read/extend.
-- **Auth.js (NextAuth v5)** with username + password login, sessions
-  stored as JWT cookies.
-- **Tailwind CSS v4** + Radix UI primitives for the ledger-book themed
-  design.
+- **Postgres** via **Drizzle ORM** (works great with
+  [Neon](https://neon.tech)'s free tier or Vercel Postgres) — no native
+  binaries, easy to read and extend.
+- **Auth.js (NextAuth v5)** with username + password login.
+- **Tailwind CSS v4** + Radix UI primitives, **next-themes** for light/dark
+  mode, **Recharts** for charts.
 
-This stack was chosen specifically to be **easy to maintain**: no
-servers to manage, a few clearly-organized files per feature, and a
-database schema that mirrors your original spreadsheet sheet-for-sheet.
+### Design system
+
+- Primary **Indigo** `#4F46E5`, secondary **Emerald** `#10B981`.
+- Status colors: income/paid = emerald, expense/overdue = rose, pending = amber.
+- Light background `#F8FAFC` / dark background `#0F172A`, surfaces white /
+  slate‑800.
+- 12–16px corner radii, soft layered shadows, glassmorphism used sparingly
+  (top bar, mobile nav overlay only).
+- Type: **Inter** for body/UI, **Lexend** for headings and KPI numbers,
+  **JetBrains Mono** for tabular figures.
+- All tokens live as CSS variables in `src/app/globals.css` — change the
+  palette in one place and it propagates everywhere, including dark mode.
 
 ---
 
@@ -55,38 +67,25 @@ DATABASE_URL="postgresql://user:password@host:5432/dbname?sslmode=require"
 AUTH_SECRET="<run: openssl rand -base64 32>"
 ```
 
-You need a Postgres database. The fastest free option is
-[neon.tech](https://neon.tech) — create a project, copy the connection
-string it gives you into `DATABASE_URL`.
-
 Create the tables:
 
 ```bash
 npm run db:push
 ```
 
-### Add family members & import old spreadsheet data
+### Add family members & import historical spreadsheet data
 
-Open `scripts/seed.ts` and edit the `FAMILY_MEMBERS` list at the top —
-put in everyone's real name, a username, and a temporary password.
-**Nitin Sharma is set as `ADMIN`** (can delete entries); everyone else
-defaults to `MEMBER` (can view + add/edit, not delete). Adjust as
-needed.
-
-Then run:
+Edit `scripts/seed.ts`'s `FAMILY_MEMBERS` list, then:
 
 ```bash
 npm run db:seed
 ```
 
-This creates all the accounts **and** imports every historical entry
-from `Spends_Master_File.xlsx` (already converted to
-`scripts/seed-data.json`), so nothing from the old spreadsheet is lost.
-
-> Run this once. Running it twice will duplicate the historical rows
-> (it's safe to re-run for the *user* accounts — those won't duplicate —
-> but the data import will). If you need to start over, drop the tables
-> and run `db:push` again before re-seeding.
+This creates accounts and imports historical rent/expense rows from the
+original spreadsheet. It does **not** create any Properties or Tenants —
+those are new concepts with no equivalent in the old spreadsheet, so add
+them yourself from the **Properties** and **Tenants** pages once you're
+logged in (takes a couple of minutes for the 4 existing units).
 
 Start the dev server:
 
@@ -94,35 +93,15 @@ Start the dev server:
 npm run dev
 ```
 
-Visit `http://localhost:3000`, sign in with one of the accounts you
-created.
-
 ---
 
 ## 2. Deploying to Vercel
 
-1. Push this project to a GitHub repo.
-2. Go to [vercel.com/new](https://vercel.com/new) and import the repo.
-3. In the project's **Settings → Environment Variables**, add:
-   - `DATABASE_URL` — your Neon/Postgres connection string
-   - `AUTH_SECRET` — the same secret you generated locally (or a new
-     one — just make sure it doesn't change after people start using
-     the app, or everyone gets signed out)
-4. Deploy.
-5. From your own machine (with the same `.env.local` pointed at the
-   **production** database), run `npm run db:push` and `npm run
-   db:seed` once to set up tables and accounts in production.
-
-That's it — share the Vercel URL with the family, and give each person
-their username + password.
-
-### Letting family members change their password
-
-There's no self-service "change password" screen yet (kept things
-simple for v1). To change someone's password, run this once via
-`npm run db:studio` (opens a visual database browser) — find their row
-in `users`, then update `password_hash` with a new bcrypt hash. If this
-comes up often, it's a quick follow-up feature to add.
+1. Push to GitHub, import into Vercel.
+2. Add `DATABASE_URL` and `AUTH_SECRET` env vars in Vercel project settings.
+3. Deploy.
+4. Run `npm run db:push` (and `db:seed`, once) locally against the
+   **production** database before anyone logs in.
 
 ---
 
@@ -131,42 +110,46 @@ comes up often, it's a quick follow-up feature to add.
 ```
 src/
   app/
-    (app)/             # Authenticated pages (dashboard + all sections)
-    login/             # Login page
-    api/auth/          # NextAuth route handler
+    (app)/
+      page.tsx          # Dashboard
+      properties/        # Properties grid/list
+      tenants/            # Tenant directory + tenancy assignment
+      income/              # Tabs: E-392 Rent, Chitrakoot Rent
+      expenses/             # Tabs: Utilities, Construction, Misc, Returns
+      reports/               # Trend + profitability + payment behaviour
+      documents/              # Placeholder
+      settings/                # Theme + account + family member list
+    login/
+    api/auth/
   components/
-    ui/                # Generic UI primitives (button, dialog, input…)
-    ledger/             # App-specific components (sidebar, forms, tables)
+    ui/                # Generic primitives (button, dialog, tabs, select…)
+    ledger/             # App-specific: sidebar, KPI cards, charts, forms
+      panels/            # Income/Expenses tab content (one file per old section)
   lib/
     db/                # Drizzle schema + client
-    actions/           # Server Actions (add/update/delete per section)
-    auth.ts            # NextAuth config
-    data.ts            # Data-fetching + dashboard summary helpers
-    validations.ts      # Zod schemas for all forms
+    actions/             # Server Actions, one file per entity
+    auth.ts              # NextAuth config
+    data.ts               # All data-fetching + dashboard/report aggregation
+    validations.ts         # Zod schemas
 scripts/
-  seed.ts              # One-time: creates accounts + imports old data
-  seed-data.json       # Historical data extracted from the old Excel file
-drizzle/               # SQL migration files (generated from schema.ts)
+  seed.ts              # One-time: accounts + historical data import
+drizzle/               # Generated SQL migrations
 ```
 
-### Adding a new section later
+### Adding a new top-level section
 
-Each section follows the same five-file pattern — copy an existing one
-(e.g. `miscellaneous`) as a template:
-1. Add a table to `src/lib/db/schema.ts`, run `npm run db:generate` then
-   `npm run db:push`.
-2. Add a Zod schema in `src/lib/validations.ts`.
-3. Add Server Actions in `src/lib/actions/`.
-4. Add form fields + row actions components in `src/components/ledger/`.
-5. Add the page in `src/app/(app)/your-section/page.tsx` and a link in
+1. Table in `src/lib/db/schema.ts` → `npm run db:generate` → `npm run db:push`.
+2. Zod schema in `src/lib/validations.ts`.
+3. Server Actions in `src/lib/actions/`.
+4. Form fields + row/card components in `src/components/ledger/`.
+5. Page in `src/app/(app)/your-section/page.tsx` (remember
+   `export const dynamic = "force-dynamic"`) + a link in
    `src/components/ledger/sidebar.tsx`.
 
 ---
 
 ## 4. Permissions recap
 
-- **Everyone** (Admin + Members): view all data, add new entries, edit
-  existing entries.
-- **Admin only**: delete entries (delete buttons are hidden entirely
-  for Members, and the server also re-checks the role before deleting
-  — so this can't be bypassed from the browser).
+- **Everyone**: view all data, add new entries, edit existing entries.
+- **Admin only**: delete entries and properties/tenants/tenancies; sees the
+  family member list on Settings.

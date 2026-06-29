@@ -45,10 +45,10 @@ export function MobileNav() {
         createPortal(
           <div className="fixed inset-0 z-[100] lg:hidden">
             <div
-              className="fixed inset-0 bg-ink/40 backdrop-blur-[2px]"
+              className="fixed inset-0 bg-slate-950/40 backdrop-blur-[2px]"
               onClick={() => setOpen(false)}
             />
-            <div className="fixed left-0 top-0 h-full w-72 bg-paper border-r border-rule-strong py-4 animate-stamp overflow-y-auto">
+            <div className="fixed left-0 top-0 h-full w-72 bg-background border-r border-border py-4 animate-fade-rise overflow-y-auto">
               <Sidebar onNavigate={() => setOpen(false)} />
             </div>
           </div>,
