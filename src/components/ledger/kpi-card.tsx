@@ -41,10 +41,10 @@ export function KpiCard({
 
   return (
     <div className="app-card app-card-hover relative overflow-hidden p-5">
-      <div className="flex items-start justify-between gap-3">
+      <div className="flex items-start justify-between gap-3 overflow-x-auto">
         <div className="min-w-0">
           <p className="text-xs font-medium text-foreground-soft">{label}</p>
-          <p className="font-display text-2xl font-semibold text-foreground mt-1.5 font-mono-num truncate">
+          <p className="font-display text-xl sm:text-2xl font-semibold text-foreground mt-1.5 font-mono-num whitespace-nowrap">
             {value}
           </p>
           {trend !== undefined && (
