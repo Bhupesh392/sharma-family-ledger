@@ -6,8 +6,20 @@ import {
   construction,
   returnItems,
   miscellaneous,
+  properties,
+  tenants,
+  tenancies,
+  users,
 } from "@/lib/db/schema";
-import { desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
+
+export async function getAllUsers() {
+  return db
+    .select({ id: users.id, name: users.name, username: users.username, role: users.role })
+    .from(users)
+    .orderBy(users.name);
+}
+
 
 export async function getAllRent() {
   return db.select().from(e392Rent).orderBy(desc(e392Rent.month));
@@ -33,8 +45,86 @@ export async function getAllMisc() {
   return db.select().from(miscellaneous).orderBy(desc(miscellaneous.date));
 }
 
+export async function getAllProperties() {
+  return db.select().from(properties).orderBy(properties.name);
+}
+
+export async function getAllTenants() {
+  return db.select().from(tenants).orderBy(tenants.name);
+}
+
+export async function getAllTenancies() {
+  return db.select().from(tenancies).orderBy(desc(tenancies.startDate));
+}
+
+export async function getPropertyWithTenancy(propertyId: number) {
+  const [property] = await db
+    .select()
+    .from(properties)
+    .where(eq(properties.id, propertyId))
+    .limit(1);
+  const tenancyRows = await db
+    .select()
+    .from(tenancies)
+    .where(eq(tenancies.propertyId, propertyId))
+    .orderBy(desc(tenancies.startDate));
+  return { property, tenancies: tenancyRows };
+}
+
+// Derives occupancy per property: a property is "occupied" if it has a
+// tenancy with status ACTIVE. This is computed, not stored, per the
+// product decision to auto-derive occupancy rather than hand-toggle it.
+export async function getPropertiesWithOccupancy() {
+  const [allProperties, allTenancies, allTenants] = await Promise.all([
+    getAllProperties(),
+    getAllTenancies(),
+    getAllTenants(),
+  ]);
+
+  const tenantsById = new Map(allTenants.map((t) => [t.id, t]));
+
+  return allProperties.map((property) => {
+    const activeTenancy = allTenancies.find(
+      (t) => t.propertyId === property.id && t.status === "ACTIVE"
+    );
+    const tenant = activeTenancy ? tenantsById.get(activeTenancy.tenantId) : undefined;
+    return {
+      ...property,
+      occupied: !!activeTenancy,
+      activeTenancy,
+      tenant,
+    };
+  });
+}
+
+// Mirrors getPropertiesWithOccupancy from the tenant's side: for each
+// tenant, find their active tenancy (if any) and the property it's for.
+export async function getTenantsWithCurrentProperty() {
+  const [allTenants, allTenancies, allProperties] = await Promise.all([
+    getAllTenants(),
+    getAllTenancies(),
+    getAllProperties(),
+  ]);
+
+  const propertiesById = new Map(allProperties.map((p) => [p.id, p]));
+
+  return allTenants.map((tenant) => {
+    const activeTenancy = allTenancies.find(
+      (t) => t.tenantId === tenant.id && t.status === "ACTIVE"
+    );
+    const property = activeTenancy ? propertiesById.get(activeTenancy.propertyId) : undefined;
+    const tenancyHistory = allTenancies.filter((t) => t.tenantId === tenant.id);
+    return {
+      ...tenant,
+      activeTenancy,
+      property,
+      tenancyHistory,
+    };
+  });
+}
+
 export async function getDashboardSummary() {
-  const [rent, utilities, chitrakoot, constructionRows, returns, misc] =
+  const [rent, utilities, chitrakoot, constructionRows, returns, misc, propertiesWithOccupancy] =
     await Promise.all([
       getAllRent(),
       getAllUtilities(),
@@ -42,6 +132,7 @@ export async function getDashboardSummary() {
       getAllConstruction(),
       getAllReturnItems(),
       getAllMisc(),
+      getPropertiesWithOccupancy(),
     ]);
 
   const sum = (arr: { amount?: string; rent?: string }[], key: "amount" | "rent" = "amount") =>
@@ -70,7 +161,30 @@ export async function getDashboardSummary() {
 
   const totalIncome = e392RentTotal + chitrakootRentTotal;
   const totalExpense = e392UtilitiesTotal + constructionTotal + miscTotal;
+  const netProfit = totalIncome - totalExpense;
   const pendingChitrakootDifference = chitrakootRentTotal - chitrakootSubmittedTotal;
+
+  // Outstanding rent: expected rent this month per occupied property,
+  // minus what's actually been recorded as paid this month.
+  const occupiedCount = propertiesWithOccupancy.filter((p) => p.occupied).length;
+  const vacantCount = propertiesWithOccupancy.length - occupiedCount;
+  const expectedRentThisMonth = propertiesWithOccupancy
+    .filter((p) => p.occupied)
+    .reduce((acc, p) => acc + (p.monthlyRent ? parseFloat(p.monthlyRent) : 0), 0);
+  const collectedRentThisMonth =
+    sum(rentThisMonth, "rent") +
+    sum(chitrakoot.filter((c) => c.month.startsWith(currentMonthKey)));
+  const outstandingRent = Math.max(0, expectedRentThisMonth - collectedRentThisMonth);
+
+  // Last 6 months income vs expense, for the trend chart.
+  const monthlyTrend = buildMonthlyTrend(rent, chitrakoot, utilities, constructionRows, misc);
+
+  // Expense breakdown by category, for the pie/donut chart.
+  const expenseBreakdown = [
+    { name: "Utilities", value: e392UtilitiesTotal },
+    { name: "Construction", value: constructionTotal },
+    { name: "Miscellaneous", value: miscTotal },
+  ].filter((d) => d.value > 0);
 
   return {
     e392RentTotal,
@@ -85,6 +199,12 @@ export async function getDashboardSummary() {
     rentThisMonthCount: rentThisMonth.length,
     totalIncome,
     totalExpense,
+    netProfit,
+    occupiedCount,
+    vacantCount,
+    outstandingRent,
+    monthlyTrend,
+    expenseBreakdown,
     counts: {
       rent: rent.length,
       utilities: utilities.length,
@@ -92,9 +212,174 @@ export async function getDashboardSummary() {
       construction: constructionRows.length,
       returns: returns.length,
       misc: misc.length,
+      properties: propertiesWithOccupancy.length,
     },
     recentRent: rent.slice(0, 5),
     recentMisc: misc.slice(0, 5),
     recentConstruction: constructionRows.slice(0, 5),
   };
+}
+
+type DatedAmount = { month?: string; date?: string | null; amount?: string; rent?: string };
+
+function buildMonthlyTrend(
+  rent: DatedAmount[],
+  chitrakoot: DatedAmount[],
+  utilities: DatedAmount[],
+  constructionRows: DatedAmount[],
+  misc: DatedAmount[]
+) {
+  const now = new Date();
+  const months: { key: string; label: string }[] = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    const label = d.toLocaleDateString("en-IN", { month: "short" });
+    months.push({ key, label });
+  }
+
+  return months.map(({ key, label }) => {
+    const income =
+      rent.filter((r) => r.month?.startsWith(key)).reduce((a, r) => a + parseFloat(r.rent ?? "0"), 0) +
+      chitrakoot
+        .filter((c) => c.month?.startsWith(key))
+        .reduce((a, c) => a + parseFloat(c.amount ?? "0"), 0);
+    const expense =
+      utilities
+        .filter((u) => u.date?.startsWith(key))
+        .reduce((a, u) => a + parseFloat(u.amount ?? "0"), 0) +
+      constructionRows
+        .filter((c) => c.date?.startsWith(key))
+        .reduce((a, c) => a + parseFloat(c.amount ?? "0"), 0) +
+      misc
+        .filter((m) => m.date?.startsWith(key))
+        .reduce((a, m) => a + parseFloat(m.amount ?? "0"), 0);
+    return { month: label, income, expense, profit: income - expense };
+  });
+}
+
+export type Notification = {
+  id: string;
+  title: string;
+  description: string;
+  tone: "pending" | "overdue" | "default";
+};
+
+export async function getNotifications(): Promise<Notification[]> {
+  const summary = await getDashboardSummary();
+  const notifications: Notification[] = [];
+
+  const formatAmount = (n: number) =>
+    n.toLocaleString("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 });
+
+  if (summary.outstandingRent > 0) {
+    notifications.push({
+      id: "outstanding-rent",
+      title: "Rent outstanding this month",
+      description: `${formatAmount(summary.outstandingRent)} not yet recorded as collected.`,
+      tone: "overdue",
+    });
+  }
+
+  if (summary.pendingChitrakootDifference > 0) {
+    notifications.push({
+      id: "chitrakoot-pending",
+      title: "Chitrakoot rent not fully submitted",
+      description: `${formatAmount(summary.pendingChitrakootDifference)} collected but not yet submitted to Nitin.`,
+      tone: "pending",
+    });
+  }
+
+  if (summary.vacantCount > 0) {
+    notifications.push({
+      id: "vacant-properties",
+      title: `${summary.vacantCount} ${summary.vacantCount === 1 ? "property" : "properties"} vacant`,
+      description: "No active tenant recorded for this property.",
+      tone: "pending",
+    });
+  }
+
+  return notifications;
+}
+
+// Reports: property-level profitability (rent collected per floor minus
+// the utility bills tied to that floor — a simple but real P&L per unit).
+export async function getPropertyProfitability() {
+  const [rent, utilities] = await Promise.all([getAllRent(), getAllUtilities()]);
+
+  const floors = ["GROUND", "FIRST", "SECOND"] as const;
+  return floors.map((floor) => {
+    const income = rent
+      .filter((r) => r.floor === floor)
+      .reduce((a, r) => a + parseFloat(r.rent), 0);
+    const expense = utilities
+      .filter((u) => u.floor === floor)
+      .reduce((a, u) => a + parseFloat(u.amount), 0);
+    return {
+      name: `${floor.charAt(0)}${floor.slice(1).toLowerCase()} Floor`,
+      income,
+      expense,
+      profit: income - expense,
+    };
+  });
+}
+
+// 12-month income/expense series for the yearly reports view.
+export async function getYearlyTrend() {
+  const [rent, chitrakoot, utilities, constructionRows, misc] = await Promise.all([
+    getAllRent(),
+    getAllChitrakootRent(),
+    getAllUtilities(),
+    getAllConstruction(),
+    getAllMisc(),
+  ]);
+
+  const now = new Date();
+  const months: { key: string; label: string }[] = [];
+  for (let i = 11; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
+    const label = d.toLocaleDateString("en-IN", { month: "short", year: "2-digit" });
+    months.push({ key, label });
+  }
+
+  return months.map(({ key, label }) => {
+    const income =
+      rent.filter((r) => r.month.startsWith(key)).reduce((a, r) => a + parseFloat(r.rent), 0) +
+      chitrakoot
+        .filter((c) => c.month.startsWith(key))
+        .reduce((a, c) => a + parseFloat(c.amount), 0);
+    const expense =
+      utilities
+        .filter((u) => u.date.startsWith(key))
+        .reduce((a, u) => a + parseFloat(u.amount), 0) +
+      constructionRows
+        .filter((c) => c.date?.startsWith(key))
+        .reduce((a, c) => a + parseFloat(c.amount), 0) +
+      misc
+        .filter((m) => m.date.startsWith(key))
+        .reduce((a, m) => a + parseFloat(m.amount), 0);
+    return { month: label, income, expense, profit: income - expense };
+  });
+}
+
+// Tenant payment behaviour: for the Chitrakoot tenant relationship, how
+// promptly has rent been submitted relative to the month it covers.
+export async function getTenantPaymentBehavior() {
+  const chitrakoot = await getAllChitrakootRent();
+  return chitrakoot
+    .filter((c) => c.submittedDate)
+    .map((c) => {
+      const monthDate = new Date(c.month + "T00:00:00");
+      const submittedDate = new Date(c.submittedDate + "T00:00:00");
+      const daysLate = Math.round(
+        (submittedDate.getTime() - monthDate.getTime()) / (1000 * 60 * 60 * 24)
+      );
+      return {
+        month: c.month,
+        label: monthDate.toLocaleDateString("en-IN", { month: "short", year: "numeric" }),
+        daysLate,
+      };
+    })
+    .sort((a, b) => a.month.localeCompare(b.month));
 }

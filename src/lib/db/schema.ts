@@ -15,6 +15,14 @@ export const returnStatusEnum = pgEnum("return_status", [
   "PENDING",
   "COMPLETED",
 ]);
+export const propertyTypeEnum = pgEnum("property_type", [
+  "RESIDENTIAL",
+  "SHOP",
+]);
+export const tenancyStatusEnum = pgEnum("tenancy_status", [
+  "ACTIVE",
+  "ENDED",
+]);
 
 // ---------- Users ----------
 export const users = pgTable("users", {
@@ -26,6 +34,55 @@ export const users = pgTable("users", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
+// ---------- Properties ----------
+// One row per rentable unit: E-392 Ground/First/Second floor, Chitrakoot Shop.
+// Designed to be extensible if more properties are added later.
+export const properties = pgTable("properties", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(), // e.g. "E-392 Ground Floor"
+  type: propertyTypeEnum("type").notNull().default("RESIDENTIAL"),
+  address: text("address"),
+  monthlyRent: numeric("monthly_rent", { precision: 12, scale: 2 }),
+  imageUrl: text("image_url"),
+  notes: text("notes"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+// ---------- Tenants ----------
+// A tenant is a person, independent of which property they currently rent.
+export const tenants = pgTable("tenants", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  phone: text("phone"),
+  email: text("email"),
+  notes: text("notes"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+// ---------- Tenancies ----------
+// Links a tenant to a property for a date range. A property's current
+// occupancy is derived from whether it has a tenancy with status ACTIVE.
+export const tenancies = pgTable("tenancies", {
+  id: serial("id").primaryKey(),
+  propertyId: integer("property_id")
+    .notNull()
+    .references(() => properties.id),
+  tenantId: integer("tenant_id")
+    .notNull()
+    .references(() => tenants.id),
+  startDate: date("start_date").notNull(),
+  endDate: date("end_date"),
+  status: tenancyStatusEnum("status").notNull().default("ACTIVE"),
+  securityDeposit: numeric("security_deposit", { precision: 12, scale: 2 }),
+  depositReturned: numeric("deposit_returned", { precision: 12, scale: 2 }),
+  notes: text("notes"),
+  createdById: integer("created_by_id").references(() => users.id),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
 // ---------- E-392 Rent (per floor) ----------
 export const e392Rent = pgTable("e392_rent", {
   id: serial("id").primaryKey(),
@@ -35,6 +92,7 @@ export const e392Rent = pgTable("e392_rent", {
   paidTo: text("paid_to").notNull().default("Nitin Sharma"),
   mode: text("mode").notNull().default("Online"),
   notes: text("notes"),
+  propertyId: integer("property_id").references(() => properties.id),
   createdById: integer("created_by_id").references(() => users.id),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
@@ -50,6 +108,7 @@ export const e392Utilities = pgTable("e392_utilities", {
   amount: numeric("amount", { precision: 12, scale: 2 }).notNull(),
   mode: text("mode"),
   notes: text("notes"),
+  propertyId: integer("property_id").references(() => properties.id),
   createdById: integer("created_by_id").references(() => users.id),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
@@ -65,6 +124,7 @@ export const chitrakootRent = pgTable("chitrakoot_rent", {
   submittedAmount: numeric("submitted_amount", { precision: 12, scale: 2 }),
   submittedDate: date("submitted_date"),
   notes: text("notes"),
+  propertyId: integer("property_id").references(() => properties.id),
   createdById: integer("created_by_id").references(() => users.id),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),

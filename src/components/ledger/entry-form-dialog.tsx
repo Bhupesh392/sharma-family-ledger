@@ -70,7 +70,7 @@ export function EntryFormDialog({
             >
               Cancel
             </Button>
-            <Button type="submit" variant="maroon" disabled={pending} className="w-full sm:w-auto">
+            <Button type="submit" variant="default" disabled={pending} className="w-full sm:w-auto">
               {pending ? "Saving…" : submitLabel}
             </Button>
           </DialogFooter>

@@ -28,7 +28,7 @@ export function ConstructionRowActions({
       <EntryFormDialog
         trigger={
           <Button variant="ghost" size="icon" aria-label="Edit entry">
-            <Pencil className="h-4 w-4 text-ink-soft" />
+            <Pencil className="h-4 w-4 text-foreground-soft" />
           </Button>
         }
         title="Edit construction expense"

@@ -1,177 +1,161 @@
 import Link from "next/link";
-import { getDashboardSummary } from "@/lib/data";
-import { formatINR, formatMonth } from "@/lib/utils";
-import { StatCard } from "@/components/ledger/stat-card";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import {
-  Wallet,
-  TrendingDown,
   TrendingUp,
-  Zap,
-  Store,
+  TrendingDown,
+  Wallet,
+  Receipt,
+  Building2,
+  DoorOpen,
   ArrowRight,
 } from "lucide-react";
+import { getDashboardSummary } from "@/lib/data";
+import { formatINR, formatMonth } from "@/lib/utils";
+import { KpiCard } from "@/components/ledger/kpi-card";
+import { IncomeExpenseTrendChart } from "@/components/ledger/income-expense-trend-chart";
+import { ExpenseBreakdownChart } from "@/components/ledger/expense-breakdown-chart";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+
+export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
   const summary = await getDashboardSummary();
 
+  // Build sparkline series from the 6-month trend for each KPI.
+  const incomeSpark = summary.monthlyTrend.map((m) => ({ value: m.income }));
+  const expenseSpark = summary.monthlyTrend.map((m) => ({ value: m.expense }));
+  const profitSpark = summary.monthlyTrend.map((m) => ({ value: m.profit }));
+
+  // Simple month-over-month trend percentage (last vs. second-to-last).
+  const trendPct = (series: { value: number }[]) => {
+    if (series.length < 2) return undefined;
+    const prev = series[series.length - 2].value;
+    const curr = series[series.length - 1].value;
+    if (prev === 0) return curr > 0 ? 100 : 0;
+    return ((curr - prev) / prev) * 100;
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="font-display text-2xl lg:text-3xl font-semibold text-ink">
-          Overview
+        <h1 className="font-display text-2xl lg:text-3xl font-semibold text-foreground">
+          Dashboard
         </h1>
-        <p className="text-sm text-ink-soft mt-1">
-          A running snapshot of every rent and expense entry across the family
-          properties.
+        <p className="text-sm text-foreground-soft mt-1">
+          A real-time overview of rental income, expenses, and occupancy.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard
-          label="Total rent collected"
+      {/* KPI cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+        <KpiCard
+          label="Total rental income"
           value={formatINR(summary.totalIncome)}
-          icon={TrendingUp}
-          tone="credit"
-          sub="E-392 + Chitrakoot Shop"
+          icon={<TrendingUp />}
+          tone="income"
+          trend={trendPct(incomeSpark)}
+          comparisonLabel="vs last month"
+          sparkline={incomeSpark}
         />
-        <StatCard
+        <KpiCard
           label="Total expenses"
           value={formatINR(summary.totalExpense)}
-          icon={TrendingDown}
-          tone="debit"
-          sub="Utilities + construction + misc"
+          icon={<TrendingDown />}
+          tone="expense"
+          trend={trendPct(expenseSpark)}
+          comparisonLabel="vs last month"
+          sparkline={expenseSpark}
         />
-        <StatCard
-          label="E-392 utility bills"
-          value={formatINR(summary.e392UtilitiesTotal)}
-          icon={Zap}
-          tone="gold"
-          sub={`${summary.counts.utilities} bills recorded`}
+        <KpiCard
+          label="Net profit"
+          value={formatINR(summary.netProfit)}
+          icon={<Wallet />}
+          tone={summary.netProfit >= 0 ? "income" : "expense"}
+          trend={trendPct(profitSpark)}
+          comparisonLabel="vs last month"
+          sparkline={profitSpark}
         />
-        <StatCard
-          label="Chitrakoot shop rent"
-          value={formatINR(summary.chitrakootRentTotal)}
-          icon={Store}
-          sub={
-            summary.pendingChitrakootDifference > 0
-              ? `${formatINR(summary.pendingChitrakootDifference)} not yet submitted`
-              : "Fully submitted"
-          }
+        <KpiCard
+          label="Outstanding rent"
+          value={formatINR(summary.outstandingRent)}
+          icon={<Receipt />}
+          tone={summary.outstandingRent > 0 ? "pending" : "default"}
+        />
+        <KpiCard
+          label="Occupied properties"
+          value={String(summary.occupiedCount)}
+          icon={<Building2 />}
+          tone="default"
+        />
+        <KpiCard
+          label="Vacant properties"
+          value={String(summary.vacantCount)}
+          icon={<DoorOpen />}
+          tone={summary.vacantCount > 0 ? "pending" : "default"}
         />
       </div>
 
+      {/* Trend + breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <Card>
+        <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>E-392 rent by floor</CardTitle>
+            <CardTitle>Income vs expense trend</CardTitle>
           </CardHeader>
-          <CardContent className="flex flex-col gap-3">
-            {(["GROUND", "FIRST", "SECOND"] as const).map((floor) => (
-              <div key={floor} className="flex items-center justify-between">
-                <span className="text-sm text-ink-soft">
-                  {floor.charAt(0) + floor.slice(1).toLowerCase()} Floor
-                </span>
-                <span className="font-mono-num text-sm font-medium text-ink">
-                  {formatINR(summary.floorTotals[floor])}
-                </span>
-              </div>
-            ))}
-            <Link
-              href="/e392-rent"
-              className="text-sm text-maroon flex items-center gap-1 mt-1 hover:underline"
-            >
-              View all rent entries <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
+          <CardContent>
+            <IncomeExpenseTrendChart data={summary.monthlyTrend} />
           </CardContent>
         </Card>
-
         <Card>
           <CardHeader>
-            <CardTitle>Construction (JagdishPuri)</CardTitle>
+            <CardTitle>Expense breakdown</CardTitle>
           </CardHeader>
-          <CardContent className="flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-ink-soft">Total spent</span>
-              <span className="font-mono-num text-sm font-medium text-debit">
-                {formatINR(summary.constructionTotal)}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-ink-soft">Entries logged</span>
-              <span className="font-mono-num text-sm font-medium text-ink">
-                {summary.counts.construction}
-              </span>
-            </div>
-            <Link
-              href="/construction"
-              className="text-sm text-maroon flex items-center gap-1 mt-1 hover:underline"
-            >
-              View construction log <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Returns &amp; misc.</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-3">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-ink-soft">Items returned</span>
-              <span className="font-mono-num text-sm font-medium text-ink">
-                {formatINR(summary.returnsTotal)}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-ink-soft">Miscellaneous spend</span>
-              <span className="font-mono-num text-sm font-medium text-debit">
-                {formatINR(summary.miscTotal)}
-              </span>
-            </div>
-            <Link
-              href="/miscellaneous"
-              className="text-sm text-maroon flex items-center gap-1 mt-1 hover:underline"
-            >
-              View miscellaneous <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
+          <CardContent>
+            <ExpenseBreakdownChart data={summary.expenseBreakdown} />
           </CardContent>
         </Card>
       </div>
 
+      {/* Recent activity */}
       <Card>
         <CardHeader>
           <CardTitle>Recent rent entries</CardTitle>
         </CardHeader>
         <CardContent>
           {summary.recentRent.length === 0 ? (
-            <p className="text-sm text-ink-soft">No rent entries yet.</p>
+            <p className="text-sm text-foreground-soft">No rent entries yet.</p>
           ) : (
             <div className="flex flex-col">
               {summary.recentRent.map((r, i) => (
                 <div
                   key={r.id}
-                  className={`flex items-center justify-between py-2.5 ${i !== 0 ? "ledger-divider" : ""}`}
+                  className={`flex items-center justify-between py-2.5 ${i !== 0 ? "app-divider" : ""}`}
                 >
                   <div className="flex items-center gap-3">
-                    <Wallet className="h-4 w-4 text-ink-soft" />
+                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-100 text-indigo shrink-0">
+                      <Wallet className="h-4 w-4" />
+                    </span>
                     <div>
-                      <p className="text-sm font-medium text-ink">
+                      <p className="text-sm font-medium text-foreground">
                         {r.floor.charAt(0) + r.floor.slice(1).toLowerCase()} Floor &middot;{" "}
                         {formatMonth(r.month)}
                       </p>
-                      <p className="text-xs text-ink-soft">
+                      <p className="text-xs text-foreground-soft">
                         Paid to {r.paidTo} via {r.mode}
                       </p>
                     </div>
                   </div>
-                  <span className="font-mono-num text-sm font-semibold text-credit">
+                  <span className="font-mono-num text-sm font-semibold text-income">
                     {formatINR(r.rent)}
                   </span>
                 </div>
               ))}
             </div>
           )}
+          <Link
+            href="/income"
+            className="text-sm text-indigo flex items-center gap-1 mt-3 hover:underline"
+          >
+            View all income <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
         </CardContent>
       </Card>
     </div>

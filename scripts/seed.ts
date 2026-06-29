@@ -30,9 +30,9 @@ const FAMILY_MEMBERS: {
   password: string;
   role: "ADMIN" | "MEMBER";
 }[] = [
-  { name: "Nitin Sharma", username: "nitin", password: "ChangeMe123!", role: "MEMBER" },
+  { name: "Nitin Sharma", username: "nitin", password: "ChangeMe123!", role: "ADMIN" },
   { name: "Chetan Sharma", username: "chetan", password: "ChangeMe123!", role: "MEMBER" },
-  { name: "Bhupesh Sharma", username: "bhupesh", password: "ChangeMe123!", role: "ADMIN" },
+  { name: "Bhupesh Sharma", username: "bhupesh", password: "ChangeMe123!", role: "MEMBER" },
 ];
 
 async function main() {
