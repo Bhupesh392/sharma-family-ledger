@@ -69,7 +69,7 @@ export default function LoginPage() {
           </form>
         </div>
         <p className="text-center text-xs text-foreground-soft mt-4">
-          Don&apos;t have a password yet? Ask Nitin to add your account.
+          Don&apos;t have a password yet? Ask Admin to add your account.
         </p>
       </div>
     </main>

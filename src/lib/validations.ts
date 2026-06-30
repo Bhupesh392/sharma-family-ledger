@@ -77,14 +77,37 @@ export const propertySchema = z.object({
   notes: z.string().optional(),
 });
 
+export const idProofTypeValues = [
+  "AADHAAR",
+  "PAN",
+  "PASSPORT",
+  "VOTER_ID",
+  "DRIVING_LICENSE",
+  "OTHER",
+] as const;
+
 export const tenantSchema = z.object({
   name: z.string().min(1, "Required"),
   phone: z.string().optional(),
   email: z.string().optional(),
+  idProofType: z.enum(idProofTypeValues).optional().nullable(),
+  idProofNumber: z.string().optional(),
+  occupation: z.string().optional(),
+  numberOfOccupants: z.coerce.number().int().positive().optional().nullable(),
+  emergencyContactName: z.string().optional(),
+  emergencyContactPhone: z.string().optional(),
   notes: z.string().optional(),
 });
 
 export const tenancyStatusValues = ["ACTIVE", "ENDED"] as const;
+
+export const agreementStatusValues = [
+  "ACTIVE",
+  "DUE_FOR_RENEWAL",
+  "EXPIRED",
+  "RENEWED",
+  "NOT_SET",
+] as const;
 
 export const tenancySchema = z.object({
   propertyId: z.coerce.number().positive("Select a property"),
@@ -94,5 +117,9 @@ export const tenancySchema = z.object({
   status: z.enum(tenancyStatusValues),
   securityDeposit: z.coerce.number().optional().nullable(),
   depositReturned: z.coerce.number().optional().nullable(),
+  agreementStartDate: z.string().optional().nullable(),
+  agreementDurationMonths: z.coerce.number().int().positive().optional().nullable(),
+  // agreementRenewalDate is derived server-side from start + duration,
+  // not accepted directly from the form.
   notes: z.string().optional(),
 });

@@ -24,6 +24,12 @@ function parseForm(formData: FormData) {
     name: formData.get("name"),
     phone: formData.get("phone") || undefined,
     email: formData.get("email") || undefined,
+    idProofType: formData.get("idProofType") || undefined,
+    idProofNumber: formData.get("idProofNumber") || undefined,
+    occupation: formData.get("occupation") || undefined,
+    numberOfOccupants: formData.get("numberOfOccupants") || undefined,
+    emergencyContactName: formData.get("emergencyContactName") || undefined,
+    emergencyContactPhone: formData.get("emergencyContactPhone") || undefined,
     notes: formData.get("notes") || undefined,
   });
 }
@@ -36,6 +42,12 @@ export async function addTenant(formData: FormData) {
     name: parsed.name,
     phone: parsed.phone || null,
     email: parsed.email || null,
+    idProofType: parsed.idProofType || null,
+    idProofNumber: parsed.idProofNumber || null,
+    occupation: parsed.occupation || null,
+    numberOfOccupants: parsed.numberOfOccupants ?? null,
+    emergencyContactName: parsed.emergencyContactName || null,
+    emergencyContactPhone: parsed.emergencyContactPhone || null,
     notes: parsed.notes || null,
   });
 
@@ -54,6 +66,12 @@ export async function updateTenant(id: number, formData: FormData) {
       name: parsed.name,
       phone: parsed.phone || null,
       email: parsed.email || null,
+      idProofType: parsed.idProofType || null,
+      idProofNumber: parsed.idProofNumber || null,
+      occupation: parsed.occupation || null,
+      numberOfOccupants: parsed.numberOfOccupants ?? null,
+      emergencyContactName: parsed.emergencyContactName || null,
+      emergencyContactPhone: parsed.emergencyContactPhone || null,
       notes: parsed.notes || null,
       updatedAt: new Date(),
     })

@@ -299,6 +299,33 @@ export async function getNotifications(): Promise<Notification[]> {
     });
   }
 
+  // Rent agreement renewals / expirations, one notification per affected tenant.
+  const tenantsWithProperty = await getTenantsWithCurrentProperty();
+  for (const tenant of tenantsWithProperty) {
+    const tenancy = tenant.activeTenancy;
+    if (!tenancy) continue;
+
+    if (tenancy.agreementStatus === "EXPIRED") {
+      notifications.push({
+        id: `agreement-expired-${tenancy.id}`,
+        title: `${tenant.name}'s rent agreement has expired`,
+        description: tenancy.agreementRenewalDate
+          ? `Was due for renewal on ${tenancy.agreementRenewalDate}.`
+          : "Renew it from the tenant's profile.",
+        tone: "overdue",
+      });
+    } else if (tenancy.agreementStatus === "DUE_FOR_RENEWAL") {
+      notifications.push({
+        id: `agreement-due-${tenancy.id}`,
+        title: `${tenant.name}'s rent agreement is due for renewal`,
+        description: tenancy.agreementRenewalDate
+          ? `Renewal due on ${tenancy.agreementRenewalDate}.`
+          : "Renew it from the tenant's profile.",
+        tone: "pending",
+      });
+    }
+  }
+
   return notifications;
 }
 

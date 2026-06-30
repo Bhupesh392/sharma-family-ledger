@@ -17,6 +17,10 @@ import { PropertyCard } from "./property-card";
 import { PropertyRow } from "./property-row";
 import { Building2 } from "lucide-react";
 
+type ActiveTenancy = {
+  agreementStatus?: "ACTIVE" | "DUE_FOR_RENEWAL" | "EXPIRED" | "RENEWED" | "NOT_SET";
+};
+
 type PropertyWithOccupancy = {
   id: number;
   name: string;
@@ -27,6 +31,7 @@ type PropertyWithOccupancy = {
   notes: string | null;
   occupied: boolean;
   tenant?: { name: string; phone: string | null } | undefined;
+  activeTenancy?: ActiveTenancy | undefined;
 };
 
 export function PropertiesBrowser({

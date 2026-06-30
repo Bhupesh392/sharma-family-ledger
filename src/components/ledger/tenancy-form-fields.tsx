@@ -28,6 +28,8 @@ export function TenancyFormFields({
     status?: string;
     securityDeposit?: string | null;
     depositReturned?: string | null;
+    agreementStartDate?: string | null;
+    agreementDurationMonths?: number | null;
     notes?: string | null;
   };
 }) {
@@ -125,6 +127,37 @@ export function TenancyFormFields({
             />
           </FormField>
         </div>
+      </div>
+
+      <div className="app-divider pt-4">
+        <p className="text-xs uppercase tracking-wide text-foreground-soft font-medium mb-3">
+          Rent agreement (optional)
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <FormField label="Agreement start date" htmlFor="agreementStartDate">
+            <Input
+              id="agreementStartDate"
+              name="agreementStartDate"
+              type="date"
+              defaultValue={defaultValues?.agreementStartDate ?? ""}
+            />
+          </FormField>
+          <FormField label="Duration (months)" htmlFor="agreementDurationMonths">
+            <Input
+              id="agreementDurationMonths"
+              name="agreementDurationMonths"
+              type="number"
+              min="1"
+              step="1"
+              placeholder="e.g. 11"
+              defaultValue={defaultValues?.agreementDurationMonths ?? ""}
+            />
+          </FormField>
+        </div>
+        <p className="text-xs text-foreground-faint mt-2">
+          The renewal date and status (active / due for renewal / expired) are calculated
+          automatically from these two fields.
+        </p>
       </div>
 
       <FormField label="Notes (optional)" htmlFor="notes">
