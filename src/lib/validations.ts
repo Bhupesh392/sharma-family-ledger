@@ -68,9 +68,18 @@ export const miscSchema = z.object({
 
 export const propertyTypeValues = ["RESIDENTIAL", "SHOP"] as const;
 
+export const rentLedgerValues = [
+  "E392_GROUND",
+  "E392_FIRST",
+  "E392_SECOND",
+  "CHITRAKOOT_SHOP",
+  "OTHER",
+] as const;
+
 export const propertySchema = z.object({
   name: z.string().min(1, "Required"),
   type: z.enum(propertyTypeValues),
+  rentLedger: z.enum(rentLedgerValues),
   address: z.string().optional(),
   monthlyRent: z.coerce.number().optional().nullable(),
   imageUrl: z.string().optional(),

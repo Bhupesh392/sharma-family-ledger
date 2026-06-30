@@ -23,8 +23,10 @@ import {
 } from "@/components/ui/dialog";
 import { Badge, type BadgeProps } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { formatINR, formatDate } from "@/lib/utils";
-import { renewAgreement } from "@/lib/actions/tenancies";
+import { renewAgreementWithRent } from "@/lib/actions/tenancies";
 
 type Tenancy = {
   id: number;
@@ -51,7 +53,7 @@ type TenantProfile = {
   emergencyContactName?: string | null;
   emergencyContactPhone?: string | null;
   notes: string | null;
-  property?: { id: number; name: string } | undefined;
+  property?: { id: number; name: string; monthlyRent?: string | null } | undefined;
   activeTenancy?: Tenancy | undefined;
   tenancyHistory: Tenancy[];
 };
@@ -82,15 +84,17 @@ export function TenantProfileDialog({
 }) {
   const [open, setOpen] = useState(false);
   const [renewing, setRenewing] = useState(false);
+  const [showRenewForm, setShowRenewForm] = useState(false);
   const tenancy = tenant.activeTenancy;
   const agreementInfo = AGREEMENT_BADGE[tenancy?.agreementStatus ?? "NOT_SET"];
 
-  async function handleRenew() {
+  async function handleRenew(formData: FormData) {
     if (!tenancy) return;
     setRenewing(true);
     try {
-      await renewAgreement(tenancy.id);
-      toast.success("Agreement marked as renewed");
+      await renewAgreementWithRent(tenancy.id, formData);
+      toast.success("Agreement renewed and revised rent logged");
+      setShowRenewForm(false);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not renew agreement");
     } finally {
@@ -198,16 +202,54 @@ export function TenantProfileDialog({
                   )}
                   {(tenancy.agreementStatus === "DUE_FOR_RENEWAL" ||
                     tenancy.agreementStatus === "EXPIRED") && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="mt-2 self-start"
-                      onClick={handleRenew}
-                      disabled={renewing}
-                    >
-                      <RefreshCw className="h-3.5 w-3.5" />
-                      {renewing ? "Renewing…" : "Mark as renewed (starts today)"}
-                    </Button>
+                    <div className="mt-2">
+                      {!showRenewForm ? (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setShowRenewForm(true)}
+                        >
+                          <RefreshCw className="h-3.5 w-3.5" />
+                          Mark as renewed
+                        </Button>
+                      ) : (
+                        <form action={handleRenew} className="flex flex-col gap-2.5 app-card p-3">
+                          <Label htmlFor="revisedRent" className="text-xs">
+                            Revised monthly rent (₹)
+                          </Label>
+                          <Input
+                            id="revisedRent"
+                            name="revisedRent"
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            placeholder="e.g. 12000"
+                            defaultValue={tenant.property?.monthlyRent ?? ""}
+                            required
+                            autoFocus
+                          />
+                          <p className="text-xs text-foreground-faint">
+                            Agreement restarts today for {tenancy.agreementDurationMonths}{" "}
+                            months. This amount also gets logged as this month&apos;s rent in
+                            Income.
+                          </p>
+                          <div className="flex gap-2">
+                            <Button type="submit" size="sm" disabled={renewing}>
+                              {renewing ? "Renewing…" : "Confirm renewal"}
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => setShowRenewForm(false)}
+                              disabled={renewing}
+                            >
+                              Cancel
+                            </Button>
+                          </div>
+                        </form>
+                      )}
+                    </div>
                   )}
                 </div>
               ) : (

@@ -38,7 +38,7 @@ type TenantWithProperty = {
   emergencyContactName?: string | null;
   emergencyContactPhone?: string | null;
   notes: string | null;
-  property?: { id: number; name: string } | undefined;
+  property?: { id: number; name: string; monthlyRent?: string | null } | undefined;
   activeTenancy?: Tenancy | undefined;
   tenancyHistory: Tenancy[];
 };

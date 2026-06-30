@@ -11,12 +11,21 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 
+const RENT_LEDGER_LABELS: Record<string, string> = {
+  E392_GROUND: "E-392 Ground Floor rent",
+  E392_FIRST: "E-392 First Floor rent",
+  E392_SECOND: "E-392 Second Floor rent",
+  CHITRAKOOT_SHOP: "Chitrakoot Shop rent",
+  OTHER: "Not linked (just track rent here)",
+};
+
 export function PropertyFormFields({
   defaultValues,
 }: {
   defaultValues?: {
     name?: string;
     type?: string;
+    rentLedger?: string;
     address?: string | null;
     monthlyRent?: string | null;
     imageUrl?: string | null;
@@ -58,6 +67,25 @@ export function PropertyFormFields({
           />
         </FormField>
       </div>
+
+      <FormField label="Linked rent ledger" htmlFor="rentLedger">
+        <Select name="rentLedger" defaultValue={defaultValues?.rentLedger ?? "OTHER"} required>
+          <SelectTrigger id="rentLedger">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {Object.entries(RENT_LEDGER_LABELS).map(([value, label]) => (
+              <SelectItem key={value} value={value}>
+                {label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </FormField>
+      <p className="text-xs text-foreground-faint -mt-2">
+        Tells the app which Income ledger to log a new entry in when a tenancy is renewed
+        with a revised rent.
+      </p>
 
       <FormField label="Address (optional)" htmlFor="address">
         <Input id="address" name="address" defaultValue={defaultValues?.address ?? ""} />
