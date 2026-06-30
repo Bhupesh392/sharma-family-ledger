@@ -9,6 +9,10 @@ import { PropertyFormFields } from "./property-form-fields";
 import { DeleteEntryButton } from "./delete-entry-button";
 import { updateProperty, deleteProperty } from "@/lib/actions/properties";
 
+type ActiveTenancy = {
+  agreementStatus?: "ACTIVE" | "DUE_FOR_RENEWAL" | "EXPIRED" | "RENEWED" | "NOT_SET";
+};
+
 type PropertyWithOccupancy = {
   id: number;
   name: string;
@@ -19,6 +23,7 @@ type PropertyWithOccupancy = {
   notes: string | null;
   occupied: boolean;
   tenant?: { name: string; phone: string | null } | undefined;
+  activeTenancy?: ActiveTenancy | undefined;
 };
 
 export function PropertyRow({
@@ -50,6 +55,16 @@ export function PropertyRow({
       <Badge variant={property.occupied ? "success" : "pending"} className="hidden sm:flex">
         {property.occupied ? "Occupied" : "Vacant"}
       </Badge>
+      {property.activeTenancy?.agreementStatus === "DUE_FOR_RENEWAL" && (
+        <Badge variant="pending" className="hidden lg:flex">
+          Renewal due
+        </Badge>
+      )}
+      {property.activeTenancy?.agreementStatus === "EXPIRED" && (
+        <Badge variant="overdue" className="hidden lg:flex">
+          Agreement expired
+        </Badge>
+      )}
       <p className="font-mono-num text-sm font-semibold text-foreground w-24 text-right shrink-0 hidden md:block">
         {property.monthlyRent ? formatINR(property.monthlyRent) : "—"}
       </p>

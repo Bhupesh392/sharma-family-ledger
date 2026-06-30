@@ -10,6 +10,10 @@ import { PropertyFormFields } from "./property-form-fields";
 import { DeleteEntryButton } from "./delete-entry-button";
 import { updateProperty, deleteProperty } from "@/lib/actions/properties";
 
+type ActiveTenancy = {
+  agreementStatus?: "ACTIVE" | "DUE_FOR_RENEWAL" | "EXPIRED" | "RENEWED" | "NOT_SET";
+};
+
 type PropertyWithOccupancy = {
   id: number;
   name: string;
@@ -20,6 +24,7 @@ type PropertyWithOccupancy = {
   notes: string | null;
   occupied: boolean;
   tenant?: { name: string; phone: string | null } | undefined;
+  activeTenancy?: ActiveTenancy | undefined;
 };
 
 export function PropertyCard({
@@ -68,9 +73,21 @@ export function PropertyCard({
         </div>
 
         {property.tenant ? (
-          <div className="flex items-center gap-2 text-sm text-foreground-soft">
-            <User className="h-3.5 w-3.5 shrink-0" />
-            <span className="truncate">{property.tenant.name}</span>
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2 text-sm text-foreground-soft min-w-0">
+              <User className="h-3.5 w-3.5 shrink-0" />
+              <span className="truncate">{property.tenant.name}</span>
+            </div>
+            {property.activeTenancy?.agreementStatus === "DUE_FOR_RENEWAL" && (
+              <Badge variant="pending" className="shrink-0">
+                Renewal due
+              </Badge>
+            )}
+            {property.activeTenancy?.agreementStatus === "EXPIRED" && (
+              <Badge variant="overdue" className="shrink-0">
+                Agreement expired
+              </Badge>
+            )}
           </div>
         ) : (
           <p className="text-sm text-foreground-faint italic">No active tenant</p>

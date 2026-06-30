@@ -23,6 +23,21 @@ export const tenancyStatusEnum = pgEnum("tenancy_status", [
   "ACTIVE",
   "ENDED",
 ]);
+export const agreementStatusEnum = pgEnum("agreement_status", [
+  "ACTIVE",
+  "DUE_FOR_RENEWAL",
+  "EXPIRED",
+  "RENEWED",
+  "NOT_SET",
+]);
+export const idProofTypeEnum = pgEnum("id_proof_type", [
+  "AADHAAR",
+  "PAN",
+  "PASSPORT",
+  "VOTER_ID",
+  "DRIVING_LICENSE",
+  "OTHER",
+]);
 
 // ---------- Users ----------
 export const users = pgTable("users", {
@@ -56,6 +71,12 @@ export const tenants = pgTable("tenants", {
   name: text("name").notNull(),
   phone: text("phone"),
   email: text("email"),
+  idProofType: idProofTypeEnum("id_proof_type"),
+  idProofNumber: text("id_proof_number"),
+  occupation: text("occupation"),
+  numberOfOccupants: integer("number_of_occupants"),
+  emergencyContactName: text("emergency_contact_name"),
+  emergencyContactPhone: text("emergency_contact_phone"),
   notes: text("notes"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
@@ -77,6 +98,13 @@ export const tenancies = pgTable("tenancies", {
   status: tenancyStatusEnum("status").notNull().default("ACTIVE"),
   securityDeposit: numeric("security_deposit", { precision: 12, scale: 2 }),
   depositReturned: numeric("deposit_returned", { precision: 12, scale: 2 }),
+  // Rent agreement tracking. Renewal date is stored (not just computed on
+  // the fly) so it can be filtered/sorted on directly; it's kept in sync
+  // with agreementStartDate + agreementDurationMonths by the server action.
+  agreementStartDate: date("agreement_start_date"),
+  agreementDurationMonths: integer("agreement_duration_months"),
+  agreementRenewalDate: date("agreement_renewal_date"),
+  agreementStatus: agreementStatusEnum("agreement_status").notNull().default("NOT_SET"),
   notes: text("notes"),
   createdById: integer("created_by_id").references(() => users.id),
   createdAt: timestamp("created_at").notNull().defaultNow(),
