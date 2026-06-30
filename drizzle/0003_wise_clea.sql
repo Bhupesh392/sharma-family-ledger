@@ -1,0 +1,2 @@
+CREATE TYPE "public"."rent_ledger" AS ENUM('E392_GROUND', 'E392_FIRST', 'E392_SECOND', 'CHITRAKOOT_SHOP', 'OTHER');--> statement-breakpoint
+ALTER TABLE "properties" ADD COLUMN "rent_ledger" "rent_ledger" DEFAULT 'OTHER' NOT NULL;

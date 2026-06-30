@@ -19,6 +19,13 @@ export const propertyTypeEnum = pgEnum("property_type", [
   "RESIDENTIAL",
   "SHOP",
 ]);
+export const rentLedgerEnum = pgEnum("rent_ledger", [
+  "E392_GROUND",
+  "E392_FIRST",
+  "E392_SECOND",
+  "CHITRAKOOT_SHOP",
+  "OTHER",
+]);
 export const tenancyStatusEnum = pgEnum("tenancy_status", [
   "ACTIVE",
   "ENDED",
@@ -56,6 +63,11 @@ export const properties = pgTable("properties", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(), // e.g. "E-392 Ground Floor"
   type: propertyTypeEnum("type").notNull().default("RESIDENTIAL"),
+  // Which underlying rent table this property's income is tracked in.
+  // Used to know where to log a new rent entry on renewal (e.g. from
+  // "Mark as renewed"). OTHER means: just update monthlyRent, don't
+  // auto-log anywhere.
+  rentLedger: rentLedgerEnum("rent_ledger").notNull().default("OTHER"),
   address: text("address"),
   monthlyRent: numeric("monthly_rent", { precision: 12, scale: 2 }),
   imageUrl: text("image_url"),

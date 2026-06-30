@@ -3,9 +3,10 @@
 import { revalidatePath } from "next/cache";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { tenancies } from "@/lib/db/schema";
+import { tenancies, properties, e392Rent, chitrakootRent } from "@/lib/db/schema";
 import { auth } from "@/lib/auth";
 import { tenancySchema } from "@/lib/validations";
+import { z } from "zod";
 
 async function requireUser() {
   const session = await auth();
@@ -139,15 +140,27 @@ export async function updateTenancy(id: number, formData: FormData) {
   revalidatePath("/");
 }
 
+const renewalSchema = z.object({
+  revisedRent: z.coerce.number().positive("Enter the revised rent amount"),
+});
+
 /**
- * Marks a tenancy's agreement as freshly renewed: resets the agreement
- * start date to today, keeps the same duration, recomputes the renewal
- * date, and sets status to ACTIVE. Used by the "Mark as renewed" action
- * so the person doesn't have to re-open the full edit form just to bump
- * the renewal date forward.
+ * Marks a tenancy's agreement as freshly renewed, capturing a revised
+ * rent amount:
+ *  1. Resets the agreement start date to today, keeps the same duration,
+ *     recomputes the renewal date, sets agreement status to ACTIVE.
+ *  2. Updates the property's standing monthlyRent to the revised amount.
+ *  3. If the property is linked to a rent ledger (E-392 floor or
+ *     Chitrakoot Shop), logs a new rent-collected entry for the current
+ *     month at the revised amount, so it shows up in Income immediately.
+ *     Properties with rentLedger = OTHER only get their monthlyRent
+ *     updated; nothing is auto-logged.
  */
-export async function renewAgreement(id: number) {
-  await requireUser();
+export async function renewAgreementWithRent(id: number, formData: FormData) {
+  const user = await requireUser();
+  const { revisedRent } = renewalSchema.parse({
+    revisedRent: formData.get("revisedRent"),
+  });
 
   const [tenancy] = await db.select().from(tenancies).where(eq(tenancies.id, id)).limit(1);
   if (!tenancy) throw new Error("Tenancy not found");
@@ -155,8 +168,16 @@ export async function renewAgreement(id: number) {
     throw new Error("Set an agreement duration before renewing");
   }
 
+  const [property] = await db
+    .select()
+    .from(properties)
+    .where(eq(properties.id, tenancy.propertyId))
+    .limit(1);
+  if (!property) throw new Error("Property not found");
+
   const today = new Date().toISOString().slice(0, 10);
   const { renewalDate } = computeAgreementRenewal(today, tenancy.agreementDurationMonths);
+  const currentMonth = today.slice(0, 7) + "-01";
 
   await db
     .update(tenancies)
@@ -167,6 +188,48 @@ export async function renewAgreement(id: number) {
       updatedAt: new Date(),
     })
     .where(eq(tenancies.id, id));
+
+  await db
+    .update(properties)
+    .set({ monthlyRent: String(revisedRent), updatedAt: new Date() })
+    .where(eq(properties.id, property.id));
+
+  switch (property.rentLedger) {
+    case "E392_GROUND":
+    case "E392_FIRST":
+    case "E392_SECOND": {
+      const floor = property.rentLedger.replace("E392_", "") as "GROUND" | "FIRST" | "SECOND";
+      await db.insert(e392Rent).values({
+        month: currentMonth,
+        floor,
+        rent: String(revisedRent),
+        paidTo: "Nitin Sharma",
+        mode: "Online",
+        notes: "Revised rent following agreement renewal",
+        propertyId: property.id,
+        createdById: Number(user.id),
+      });
+      revalidatePath("/income");
+      break;
+    }
+    case "CHITRAKOOT_SHOP": {
+      await db.insert(chitrakootRent).values({
+        month: currentMonth,
+        amount: String(revisedRent),
+        paidTo: "Chetan Sharma",
+        mode: "UPI",
+        notes: "Revised rent following agreement renewal",
+        propertyId: property.id,
+        createdById: Number(user.id),
+      });
+      revalidatePath("/income");
+      break;
+    }
+    case "OTHER":
+    default:
+      // No linked ledger — only the property's monthlyRent is updated.
+      break;
+  }
 
   revalidatePath("/properties");
   revalidatePath("/tenants");

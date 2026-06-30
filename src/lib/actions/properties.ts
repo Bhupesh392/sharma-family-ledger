@@ -23,6 +23,7 @@ function parseForm(formData: FormData) {
   return propertySchema.parse({
     name: formData.get("name"),
     type: formData.get("type"),
+    rentLedger: formData.get("rentLedger"),
     address: formData.get("address") || undefined,
     monthlyRent: formData.get("monthlyRent") || undefined,
     imageUrl: formData.get("imageUrl") || undefined,
@@ -37,6 +38,7 @@ export async function addProperty(formData: FormData) {
   await db.insert(properties).values({
     name: parsed.name,
     type: parsed.type,
+    rentLedger: parsed.rentLedger,
     address: parsed.address || null,
     monthlyRent: parsed.monthlyRent != null ? String(parsed.monthlyRent) : null,
     imageUrl: parsed.imageUrl || null,
@@ -56,6 +58,7 @@ export async function updateProperty(id: number, formData: FormData) {
     .set({
       name: parsed.name,
       type: parsed.type,
+      rentLedger: parsed.rentLedger,
       address: parsed.address || null,
       monthlyRent: parsed.monthlyRent != null ? String(parsed.monthlyRent) : null,
       imageUrl: parsed.imageUrl || null,
