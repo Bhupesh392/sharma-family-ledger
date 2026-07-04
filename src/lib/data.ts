@@ -10,6 +10,8 @@ import {
   tenants,
   tenancies,
   users,
+  activityLog,
+  pageViews,
 } from "@/lib/db/schema";
 import { desc, eq } from "drizzle-orm";
 
@@ -409,4 +411,81 @@ export async function getTenantPaymentBehavior() {
       };
     })
     .sort((a, b) => a.month.localeCompare(b.month));
+}
+
+// ---------- Activity Log ----------
+export async function getRecentActivity(limit = 10) {
+  return db
+    .select()
+    .from(activityLog)
+    .orderBy(desc(activityLog.createdAt))
+    .limit(limit);
+}
+
+export async function getAllActivity(filters?: {
+  userId?: number;
+  entityType?: string;
+  action?: string;
+  limit?: number;
+  offset?: number;
+}) {
+  const query = db
+    .select()
+    .from(activityLog)
+    .orderBy(desc(activityLog.createdAt))
+    .limit(filters?.limit ?? 50)
+    .offset(filters?.offset ?? 0);
+  return query;
+}
+
+// ---------- Page View Analytics ----------
+export async function getPageViewStats() {
+  const all = await db.select().from(pageViews).orderBy(desc(pageViews.createdAt));
+
+  const totalViews = all.length;
+  const uniqueSessions = new Set(all.map((v) => v.sessionId)).size;
+
+  // Per-page breakdown
+  const byPage: Record<string, number> = {};
+  for (const v of all) {
+    byPage[v.page] = (byPage[v.page] ?? 0) + 1;
+  }
+  const pageBreakdown = Object.entries(byPage)
+    .map(([page, count]) => ({ page, count }))
+    .sort((a, b) => b.count - a.count);
+
+  // Active users in last 7 days
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+  const recentUsers = new Set(
+    all
+      .filter((v) => new Date(v.createdAt) > sevenDaysAgo && v.userId)
+      .map((v) => v.userId)
+  ).size;
+
+  // Daily view trend for last 14 days
+  const dailyTrend: Record<string, number> = {};
+  const today = new Date();
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    dailyTrend[key] = 0;
+  }
+  for (const v of all) {
+    const key = new Date(v.createdAt).toISOString().slice(0, 10);
+    if (key in dailyTrend) dailyTrend[key]++;
+  }
+  const viewTrend = Object.entries(dailyTrend).map(([date, count]) => ({
+    date: date.slice(5), // "MM-DD"
+    count,
+  }));
+
+  return {
+    totalViews,
+    uniqueSessions,
+    recentUsers,
+    pageBreakdown,
+    viewTrend,
+  };
 }

@@ -13,7 +13,7 @@ export async function Header() {
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between gap-3 border-b border-border glass-surface px-4 py-3 lg:px-8">
       <div className="flex items-center gap-3 flex-1 min-w-0">
-        <MobileNav />
+        <MobileNav role={user?.role} />
         <p className="font-display text-base font-semibold text-foreground lg:hidden">
           Sharma Estates
         </p>

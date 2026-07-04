@@ -1,13 +1,17 @@
+import { auth } from "@/lib/auth";
 import { AuthSessionProvider } from "@/components/ledger/session-provider";
 import { Sidebar } from "@/components/ledger/sidebar";
 import { Header } from "@/components/ledger/header";
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+export default async function AppLayout({ children }: { children: React.ReactNode }) {
+  const session = await auth();
+  const role = session?.user?.role ?? "MEMBER";
+
   return (
     <AuthSessionProvider>
       <div className="flex min-h-screen w-full bg-background">
         <aside className="hidden lg:flex lg:w-64 lg:flex-col border-r border-border bg-surface py-4 shrink-0">
-          <Sidebar />
+          <Sidebar role={role} />
         </aside>
         <div className="flex flex-1 flex-col min-w-0">
           <Header />

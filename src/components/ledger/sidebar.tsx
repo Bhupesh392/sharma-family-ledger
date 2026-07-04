@@ -3,15 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard,
-  Building2,
-  Users,
-  TrendingUp,
-  TrendingDown,
-  BarChart3,
-  FileText,
-  Settings,
-  Landmark,
+  LayoutDashboard, Building2, Users, TrendingUp, TrendingDown,
+  BarChart3, FileText, Settings, Landmark, Activity,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -22,6 +15,7 @@ const NAV_ITEMS = [
   { href: "/income", label: "Income", icon: TrendingUp },
   { href: "/expenses", label: "Expenses", icon: TrendingDown },
   { href: "/reports", label: "Reports", icon: BarChart3 },
+  { href: "/activity", label: "Activity", icon: Activity, adminOnly: true },
   { href: "/documents", label: "Documents", icon: FileText },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
@@ -29,9 +23,11 @@ const NAV_ITEMS = [
 export function Sidebar({
   className,
   onNavigate,
+  role,
 }: {
   className?: string;
   onNavigate?: () => void;
+  role?: "ADMIN" | "MEMBER";
 }) {
   const pathname = usePathname();
 
@@ -50,7 +46,7 @@ export function Sidebar({
       </div>
 
       <div className="flex flex-col gap-0.5 px-3">
-        {NAV_ITEMS.map((item) => {
+        {NAV_ITEMS.filter((item) => !item.adminOnly || role === "ADMIN").map((item) => {
           const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
           const Icon = item.icon;
           return (
