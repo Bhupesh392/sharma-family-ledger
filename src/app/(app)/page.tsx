@@ -7,18 +7,29 @@ import {
   Building2,
   DoorOpen,
   ArrowRight,
+  Activity,
+  Eye,
 } from "lucide-react";
-import { getDashboardSummary } from "@/lib/data";
+import { getDashboardSummary, getRecentActivity, getPageViewStats } from "@/lib/data";
 import { formatINR, formatMonth } from "@/lib/utils";
 import { KpiCard } from "@/components/ledger/kpi-card";
 import { IncomeExpenseTrendChart } from "@/components/ledger/income-expense-trend-chart";
 import { ExpenseBreakdownChart } from "@/components/ledger/expense-breakdown-chart";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { ActivityItem } from "@/components/ledger/activity-item";
+import { PageViewTrendChart } from "@/components/ledger/page-view-trend-chart";
+import { auth } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
 export default async function DashboardPage() {
-  const summary = await getDashboardSummary();
+  const [summary, session, recentActivity, pageViewStats] = await Promise.all([
+    getDashboardSummary(),
+    auth(),
+    getRecentActivity(8),
+    getPageViewStats(),
+  ]);
+  const isAdmin = session?.user?.role === "ADMIN";
 
   // Build sparkline series from the 6-month trend for each KPI.
   const incomeSpark = summary.monthlyTrend.map((m) => ({ value: m.income }));
@@ -158,6 +169,81 @@ export default async function DashboardPage() {
           </Link>
         </CardContent>
       </Card>
+
+      {/* Activity feed + analytics — admin only */}
+      {isAdmin && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* Recent activity */}
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <Activity className="h-4 w-4 text-indigo" />
+                  Recent activity
+                </CardTitle>
+                <Link
+                  href="/activity"
+                  className="text-xs text-indigo hover:underline"
+                >
+                  Full history →
+                </Link>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {recentActivity.length === 0 ? (
+                <p className="text-sm text-foreground-soft">
+                  No activity logged yet. Actions by family members will appear here.
+                </p>
+              ) : (
+                <div className="flex flex-col divide-y divide-border">
+                  {recentActivity.map((entry) => (
+                    <ActivityItem key={entry.id} entry={entry} />
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Portal analytics */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Eye className="h-4 w-4 text-indigo" />
+                Portal views
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                <div>
+                  <p className="text-xs text-foreground-soft">Total views</p>
+                  <p className="text-2xl font-display font-semibold text-foreground font-mono-num">
+                    {pageViewStats.totalViews.toLocaleString()}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-foreground-soft">Unique sessions</p>
+                  <p className="text-2xl font-display font-semibold text-foreground font-mono-num">
+                    {pageViewStats.uniqueSessions.toLocaleString()}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-foreground-soft">Active last 7d</p>
+                  <p className="text-2xl font-display font-semibold text-foreground font-mono-num">
+                    {pageViewStats.recentUsers}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-foreground-soft">Top page</p>
+                  <p className="text-sm font-medium text-foreground truncate">
+                    {pageViewStats.pageBreakdown[0]?.page ?? "—"}
+                  </p>
+                </div>
+              </div>
+              <PageViewTrendChart data={pageViewStats.viewTrend} />
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }

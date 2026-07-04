@@ -6,7 +6,7 @@ import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sidebar } from "./sidebar";
 
-export function MobileNav() {
+export function MobileNav({ role }: { role?: "ADMIN" | "MEMBER" }) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -49,7 +49,7 @@ export function MobileNav() {
               onClick={() => setOpen(false)}
             />
             <div className="fixed left-0 top-0 h-full w-72 bg-background border-r border-border py-4 animate-fade-rise overflow-y-auto">
-              <Sidebar onNavigate={() => setOpen(false)} />
+              <Sidebar onNavigate={() => setOpen(false)} role={role} />
             </div>
           </div>,
           document.body

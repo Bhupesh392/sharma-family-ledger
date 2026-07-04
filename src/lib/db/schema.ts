@@ -213,3 +213,33 @@ export const miscellaneous = pgTable("miscellaneous", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
+
+// ---------- Activity Log ----------
+export const actionEnum = pgEnum("action_type", ["CREATE", "UPDATE", "DELETE"]);
+export const entityTypeEnum = pgEnum("entity_type", [
+  "RENT", "UTILITY", "CHITRAKOOT_RENT", "CONSTRUCTION",
+  "RETURN_ITEM", "MISC", "PROPERTY", "TENANT", "TENANCY", "DOCUMENT",
+]);
+
+export const activityLog = pgTable("activity_log", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id),
+  userName: text("user_name").notNull(),
+  action: actionEnum("action").notNull(),
+  entityType: entityTypeEnum("entity_type").notNull(),
+  entityId: integer("entity_id"),
+  entityLabel: text("entity_label").notNull(),
+  oldValues: text("old_values"),   // JSON string — JSONB via text for compatibility
+  newValues: text("new_values"),   // JSON string
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+// ---------- Page Views ----------
+export const pageViews = pgTable("page_views", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").references(() => users.id),
+  userName: text("user_name").notNull(),
+  page: text("page").notNull(),
+  sessionId: text("session_id").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});

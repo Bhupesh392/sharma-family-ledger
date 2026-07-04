@@ -7,6 +7,7 @@ import { tenancies, properties, e392Rent, chitrakootRent } from "@/lib/db/schema
 import { auth } from "@/lib/auth";
 import { tenancySchema } from "@/lib/validations";
 import { z } from "zod";
+import { logActivity } from "@/lib/activity";
 
 async function requireUser() {
   const session = await auth();
@@ -83,7 +84,7 @@ export async function addTenancy(formData: FormData) {
     parsed.agreementDurationMonths
   );
 
-  await db.insert(tenancies).values({
+  const [row] = await db.insert(tenancies).values({
     propertyId: parsed.propertyId,
     tenantId: parsed.tenantId,
     startDate: parsed.startDate,
@@ -99,6 +100,13 @@ export async function addTenancy(formData: FormData) {
     agreementStatus,
     notes: parsed.notes || null,
     createdById: Number(user.id),
+  }).returning();
+
+  await logActivity({
+    userId: Number(user.id), userName: user.name ?? user.id,
+    action: "CREATE", entityType: "TENANCY", entityId: row.id,
+    entityLabel: `Tenancy · Property #${parsed.propertyId} · from ${parsed.startDate}`,
+    newValues: { propertyId: parsed.propertyId, tenantId: parsed.tenantId, startDate: parsed.startDate, status: parsed.status },
   });
 
   revalidatePath("/properties");
@@ -107,12 +115,14 @@ export async function addTenancy(formData: FormData) {
 }
 
 export async function updateTenancy(id: number, formData: FormData) {
-  await requireUser();
+  const user = await requireUser();
   const parsed = parseForm(formData);
   const { renewalDate, status: agreementStatus } = computeAgreementRenewal(
     parsed.agreementStartDate,
     parsed.agreementDurationMonths
   );
+
+  const [old] = await db.select().from(tenancies).where(eq(tenancies.id, id)).limit(1);
 
   await db
     .update(tenancies)
@@ -134,6 +144,14 @@ export async function updateTenancy(id: number, formData: FormData) {
       updatedAt: new Date(),
     })
     .where(eq(tenancies.id, id));
+
+  await logActivity({
+    userId: Number(user.id), userName: user.name ?? user.id,
+    action: "UPDATE", entityType: "TENANCY", entityId: id,
+    entityLabel: `Tenancy · Property #${parsed.propertyId}`,
+    oldValues: old ? { status: old.status, agreementStartDate: old.agreementStartDate, agreementDurationMonths: old.agreementDurationMonths, securityDeposit: old.securityDeposit } : null,
+    newValues: { status: parsed.status, agreementStartDate: parsed.agreementStartDate, agreementDurationMonths: parsed.agreementDurationMonths, securityDeposit: parsed.securityDeposit },
+  });
 
   revalidatePath("/properties");
   revalidatePath("/tenants");
@@ -227,9 +245,16 @@ export async function renewAgreementWithRent(id: number, formData: FormData) {
     }
     case "OTHER":
     default:
-      // No linked ledger — only the property's monthlyRent is updated.
       break;
   }
+
+  await logActivity({
+    userId: Number(user.id), userName: user.name ?? user.id,
+    action: "UPDATE", entityType: "TENANCY", entityId: id,
+    entityLabel: `Agreement renewed · ${property.name}`,
+    oldValues: { agreementStatus: tenancy.agreementStatus, monthlyRent: property.monthlyRent },
+    newValues: { agreementStatus: "ACTIVE", monthlyRent: revisedRent, agreementStartDate: today, agreementRenewalDate: renewalDate },
+  });
 
   revalidatePath("/properties");
   revalidatePath("/tenants");
@@ -237,8 +262,17 @@ export async function renewAgreementWithRent(id: number, formData: FormData) {
 }
 
 export async function deleteTenancy(id: number) {
-  await requireAdmin();
+  const user = await requireAdmin();
+  const [old] = await db.select().from(tenancies).where(eq(tenancies.id, id)).limit(1);
   await db.delete(tenancies).where(eq(tenancies.id, id));
+
+  await logActivity({
+    userId: Number(user.id), userName: user.name ?? user.id,
+    action: "DELETE", entityType: "TENANCY", entityId: id,
+    entityLabel: old ? `Tenancy from ${old.startDate}` : `Tenancy #${id}`,
+    oldValues: old ? { status: old.status, startDate: old.startDate } : null,
+  });
+
   revalidatePath("/properties");
   revalidatePath("/tenants");
   revalidatePath("/");
