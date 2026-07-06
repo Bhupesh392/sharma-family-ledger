@@ -243,3 +243,26 @@ export const pageViews = pgTable("page_views", {
   sessionId: text("session_id").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
+
+// ---------- Documents ----------
+export const docTypeEnum = pgEnum("doc_type", [
+  "AGREEMENT",
+  "ID_DOCUMENT",
+  "RECEIPT",
+  "OTHER",
+]);
+
+export const documents = pgTable("documents", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  docType: docTypeEnum("doc_type").notNull().default("OTHER"),
+  // Encrypted Drive link — stored as "iv:authTag:ciphertext" (hex-encoded).
+  // Never decrypted until the user explicitly clicks "Open".
+  encryptedUrl: text("encrypted_url").notNull(),
+  propertyId: integer("property_id").references(() => properties.id),
+  tenantId: integer("tenant_id").references(() => tenants.id),
+  notes: text("notes"),
+  uploadedById: integer("uploaded_by_id").references(() => users.id),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
