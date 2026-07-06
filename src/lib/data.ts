@@ -12,6 +12,7 @@ import {
   users,
   activityLog,
   pageViews,
+  documents,
 } from "@/lib/db/schema";
 import { desc, eq } from "drizzle-orm";
 
@@ -488,4 +489,12 @@ export async function getPageViewStats() {
     pageBreakdown,
     viewTrend,
   };
+}
+
+// ---------- Documents ----------
+export async function getAllDocuments() {
+  return db
+    .select()
+    .from(documents)
+    .orderBy(desc(documents.createdAt));
 }

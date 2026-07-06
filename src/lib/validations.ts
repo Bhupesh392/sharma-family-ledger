@@ -132,3 +132,25 @@ export const tenancySchema = z.object({
   // not accepted directly from the form.
   notes: z.string().optional(),
 });
+
+export const docTypeValues = [
+  "AGREEMENT",
+  "ID_DOCUMENT",
+  "RECEIPT",
+  "OTHER",
+] as const;
+
+export const documentSchema = z.object({
+  name: z.string().min(1, "Required"),
+  docType: z.enum(docTypeValues),
+  url: z.string().url("Enter a valid URL").min(1, "Required"),
+  propertyId: z.preprocess(
+    (v) => (v === "none" || v === "" || v == null ? null : v),
+    z.coerce.number().nullable()
+  ),
+  tenantId: z.preprocess(
+    (v) => (v === "none" || v === "" || v == null ? null : v),
+    z.coerce.number().nullable()
+  ),
+  notes: z.string().optional(),
+});
