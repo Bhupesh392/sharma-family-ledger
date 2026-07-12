@@ -7,6 +7,7 @@ import {
   date,
   timestamp,
   pgEnum,
+  boolean,
 } from "drizzle-orm/pg-core";
 
 export const roleEnum = pgEnum("role", ["ADMIN", "MEMBER"]);
@@ -89,6 +90,8 @@ export const tenants = pgTable("tenants", {
   numberOfOccupants: integer("number_of_occupants"),
   emergencyContactName: text("emergency_contact_name"),
   emergencyContactPhone: text("emergency_contact_phone"),
+  policeVerified: boolean("police_verified").notNull().default(false),
+  policeVerificationDate: date("police_verification_date"),
   notes: text("notes"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),

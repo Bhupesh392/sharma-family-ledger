@@ -30,6 +30,8 @@ function parseForm(formData: FormData) {
     emergencyContactName: formData.get("emergencyContactName") || undefined,
     emergencyContactPhone: formData.get("emergencyContactPhone") || undefined,
     notes: formData.get("notes") || undefined,
+    policeVerified: formData.get("policeVerified") ? true : false,
+    policeVerificationDate: formData.get("policeVerificationDate") || undefined,
   });
 }
 
@@ -45,6 +47,8 @@ export async function addTenant(formData: FormData) {
     numberOfOccupants: parsed.numberOfOccupants ?? null,
     emergencyContactName: parsed.emergencyContactName || null,
     emergencyContactPhone: parsed.emergencyContactPhone || null,
+    policeVerified: parsed.policeVerified ?? false,
+    policeVerificationDate: parsed.policeVerificationDate || null,
     notes: parsed.notes || null,
   }).returning();
 
@@ -73,6 +77,8 @@ export async function updateTenant(id: number, formData: FormData) {
     numberOfOccupants: parsed.numberOfOccupants ?? null,
     emergencyContactName: parsed.emergencyContactName || null,
     emergencyContactPhone: parsed.emergencyContactPhone || null,
+    policeVerified: parsed.policeVerified ?? false,
+    policeVerificationDate: parsed.policeVerificationDate || null,
     notes: parsed.notes || null, updatedAt: new Date(),
   }).where(eq(tenants.id, id));
 
@@ -80,8 +86,15 @@ export async function updateTenant(id: number, formData: FormData) {
     userId: Number(user.id), userName: user.name ?? user.id,
     action: "UPDATE", entityType: "TENANT", entityId: id,
     entityLabel: parsed.name,
-    oldValues: old ? { name: old.name, phone: old.phone, occupation: old.occupation } : null,
-    newValues: { name: parsed.name, phone: parsed.phone, occupation: parsed.occupation },
+    oldValues: old
+      ? { name: old.name, phone: old.phone, occupation: old.occupation, policeVerified: old.policeVerified }
+      : null,
+    newValues: {
+      name: parsed.name,
+      phone: parsed.phone,
+      occupation: parsed.occupation,
+      policeVerified: parsed.policeVerified ?? false,
+    },
   });
 
   revalidatePath("/tenants");

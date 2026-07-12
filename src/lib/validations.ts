@@ -106,6 +106,8 @@ export const tenantSchema = z.object({
   emergencyContactName: z.string().optional(),
   emergencyContactPhone: z.string().optional(),
   notes: z.string().optional(),
+  policeVerified: z.boolean().optional(),
+  policeVerificationDate: z.string().optional().nullable(),
 });
 
 export const tenancyStatusValues = ["ACTIVE", "ENDED"] as const;
