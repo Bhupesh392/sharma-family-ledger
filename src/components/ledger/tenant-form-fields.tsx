@@ -34,6 +34,8 @@ export function TenantFormFields({
     emergencyContactName?: string | null;
     emergencyContactPhone?: string | null;
     notes?: string | null;
+    policeVerified?: boolean | null;
+    policeVerificationDate?: string | null;
   };
 }) {
   return (
@@ -113,6 +115,31 @@ export function TenantFormFields({
               id="emergencyContactPhone"
               name="emergencyContactPhone"
               defaultValue={defaultValues?.emergencyContactPhone ?? ""}
+            />
+          </FormField>
+        </div>
+      </div>
+
+      <div className="app-divider pt-4">
+        <p className="text-xs uppercase tracking-wide text-foreground-soft font-medium mb-3">
+          Verification
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center">
+          <FormField label="Police verified" htmlFor="policeVerified">
+            <input
+              id="policeVerified"
+              name="policeVerified"
+              type="checkbox"
+              defaultChecked={!!defaultValues?.policeVerified}
+              className="h-4 w-4"
+            />
+          </FormField>
+          <FormField label="Verification date" htmlFor="policeVerificationDate">
+            <Input
+              id="policeVerificationDate"
+              name="policeVerificationDate"
+              type="date"
+              defaultValue={defaultValues?.policeVerificationDate ?? ""}
             />
           </FormField>
         </div>

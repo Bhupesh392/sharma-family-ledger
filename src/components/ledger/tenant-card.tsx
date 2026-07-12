@@ -1,6 +1,6 @@
 "use client";
 
-import { Pencil, Phone, Mail, Home, History, UserCircle, FileSignature } from "lucide-react";
+import { Pencil, Phone, Mail, Home, History, UserCircle, FileSignature, ShieldCheck } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -37,6 +37,8 @@ type TenantWithProperty = {
   numberOfOccupants?: number | null;
   emergencyContactName?: string | null;
   emergencyContactPhone?: string | null;
+  policeVerified?: boolean;
+  policeVerificationDate?: string | null;
   notes: string | null;
   property?: { id: number; name: string; monthlyRent?: string | null } | undefined;
   activeTenancy?: Tenancy | undefined;
@@ -165,6 +167,17 @@ export function TenantCard({
           <Badge variant={tenant.activeTenancy ? "success" : "default"}>
             {tenant.activeTenancy ? "Current tenant" : "Former tenant"}
           </Badge>
+          {typeof tenant.policeVerified !== "undefined" && (
+            tenant.policeVerified ? (
+              <Badge variant="success">
+                <ShieldCheck className="h-3 w-3 mr-1 inline-block" /> Police verified
+              </Badge>
+            ) : (
+              <Badge variant="overdue">
+                <ShieldCheck className="h-3 w-3 mr-1 inline-block" /> Not police verified
+              </Badge>
+            )
+          )}
           {tenant.activeTenancy?.agreementStatus === "DUE_FOR_RENEWAL" && (
             <Badge variant="pending">Renewal due</Badge>
           )}

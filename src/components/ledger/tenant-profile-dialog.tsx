@@ -52,6 +52,8 @@ type TenantProfile = {
   numberOfOccupants?: number | null;
   emergencyContactName?: string | null;
   emergencyContactPhone?: string | null;
+  policeVerified?: boolean;
+  policeVerificationDate?: string | null;
   notes: string | null;
   property?: { id: number; name: string; monthlyRent?: string | null } | undefined;
   activeTenancy?: Tenancy | undefined;
@@ -112,6 +114,19 @@ export function TenantProfileDialog({
             {tenant.property ? `Currently at ${tenant.property.name}` : "No current property"}
           </DialogDescription>
         </DialogHeader>
+
+        {typeof tenant.policeVerified !== "undefined" && (
+          <div className="mt-1">
+            <Badge variant={tenant.policeVerified ? "success" : "overdue"}>
+              {tenant.policeVerified ? "Police verified" : "Not police verified"}
+            </Badge>
+            {tenant.policeVerified && tenant.policeVerificationDate && (
+              <span className="ml-2 text-sm text-foreground-soft">Verified on {formatDate(
+                tenant.policeVerificationDate
+              )}</span>
+            )}
+          </div>
+        )}
 
         <div className="flex flex-col gap-5">
           {/* Contact */}
