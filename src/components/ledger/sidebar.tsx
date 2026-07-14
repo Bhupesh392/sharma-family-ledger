@@ -20,6 +20,12 @@ const NAV_ITEMS = [
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
+const TENANT_NAV_ITEMS = [
+  { href: "/tenant", label: "My property", icon: LayoutDashboard },
+  { href: "/documents", label: "Documents", icon: FileText },
+  { href: "/settings", label: "Settings", icon: Settings },
+];
+
 export function Sidebar({
   className,
   onNavigate,
@@ -27,7 +33,7 @@ export function Sidebar({
 }: {
   className?: string;
   onNavigate?: () => void;
-  role?: "ADMIN" | "MEMBER";
+  role?: "ADMIN" | "MEMBER" | "TENANT";
 }) {
   const pathname = usePathname();
 
@@ -46,26 +52,28 @@ export function Sidebar({
       </div>
 
       <div className="flex flex-col gap-0.5 px-3">
-        {NAV_ITEMS.filter((item) => !item.adminOnly || role === "ADMIN").map((item) => {
-          const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
-          const Icon = item.icon;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={onNavigate}
-              className={cn(
-                "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
-                active
-                  ? "bg-indigo-100 text-indigo"
-                  : "text-foreground-soft hover:bg-surface-muted hover:text-foreground"
-              )}
-            >
-              <Icon className={cn("h-4 w-4 shrink-0", active ? "text-indigo" : "")} />
-              <span className="truncate">{item.label}</span>
-            </Link>
-          );
-        })}
+        {(role === "TENANT" ? TENANT_NAV_ITEMS : NAV_ITEMS)
+          .filter((item) => !item.adminOnly || role === "ADMIN")
+          .map((item) => {
+            const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+            const Icon = item.icon;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={onNavigate}
+                className={cn(
+                  "group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
+                  active
+                    ? "bg-indigo-100 text-indigo"
+                    : "text-foreground-soft hover:bg-surface-muted hover:text-foreground"
+                )}
+              >
+                <Icon className={cn("h-4 w-4 shrink-0", active ? "text-indigo" : "")} />
+                <span className="truncate">{item.label}</span>
+              </Link>
+            );
+          })}
       </div>
     </nav>
   );

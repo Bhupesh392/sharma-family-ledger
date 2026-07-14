@@ -95,20 +95,57 @@ export const idProofTypeValues = [
   "OTHER",
 ] as const;
 
-export const tenantSchema = z.object({
-  name: z.string().min(1, "Required"),
-  phone: z.string().optional(),
-  email: z.string().optional(),
-  idProofType: z.enum(idProofTypeValues).optional().nullable(),
-  idProofNumber: z.string().optional(),
-  occupation: z.string().optional(),
-  numberOfOccupants: z.coerce.number().int().positive().optional().nullable(),
-  emergencyContactName: z.string().optional(),
-  emergencyContactPhone: z.string().optional(),
-  notes: z.string().optional(),
-  policeVerified: z.boolean().optional(),
-  policeVerificationDate: z.string().optional().nullable(),
-});
+export const tenantSchema = z
+  .object({
+    name: z.string().min(1, "Required"),
+    phone: z.string().optional(),
+    email: z.string().optional(),
+    loginEnabled: z
+      .preprocess((value) => value === "on" || value === true, z.boolean())
+      .optional(),
+    username: z
+      .preprocess((value) => {
+        if (typeof value === "string") {
+          const trimmed = value.trim().toLowerCase();
+          return trimmed === "" ? undefined : trimmed;
+        }
+        return value;
+      }, z.string().min(1, "Username cannot be empty").optional().nullable()),
+    password: z.string().min(8, "Password must be at least 8 characters").optional(),
+    idProofType: z.enum(idProofTypeValues).optional().nullable(),
+    idProofNumber: z.string().optional(),
+    occupation: z.string().optional(),
+    numberOfOccupants: z.preprocess(
+      (value) => value === "" ? undefined : value,
+      z.coerce.number().int().positive().optional().nullable()
+    ),
+    emergencyContactName: z.string().optional(),
+    emergencyContactPhone: z.string().optional(),
+    notes: z.string().optional(),
+    policeVerified: z.boolean().optional(),
+    policeVerificationDate: z.string().optional().nullable(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.loginEnabled) {
+      if (!data.username) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Username is required when tenant login is enabled.",
+        });
+      }
+      if (!data.password) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: "Password is required when tenant login is enabled.",
+        });
+      }
+    } else if (data.username && !data.password) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Password is required when a tenant username is provided.",
+      });
+    }
+  });
 
 export const tenancyStatusValues = ["ACTIVE", "ENDED"] as const;
 

@@ -18,6 +18,7 @@ import { ExpenseBreakdownChart } from "@/components/ledger/expense-breakdown-cha
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { ActivityItem } from "@/components/ledger/activity-item";
 import { PageViewTrendChart } from "@/components/ledger/page-view-trend-chart";
+import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
@@ -29,6 +30,11 @@ export default async function DashboardPage() {
     getRecentActivity(8),
     getPageViewStats(),
   ]);
+
+  if (session?.user?.role === "TENANT") {
+    redirect("/tenant");
+  }
+
   const isAdmin = session?.user?.role === "ADMIN";
 
   // Build sparkline series from the 6-month trend for each KPI.

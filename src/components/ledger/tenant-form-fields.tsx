@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { FormField } from "./form-field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -36,8 +37,11 @@ export function TenantFormFields({
     notes?: string | null;
     policeVerified?: boolean | null;
     policeVerificationDate?: string | null;
+    username?: string | null;
   };
 }) {
+  const [loginEnabled, setLoginEnabled] = useState(!!defaultValues?.username);
+
   return (
     <>
       <FormField label="Full name" htmlFor="name">
@@ -118,6 +122,57 @@ export function TenantFormFields({
             />
           </FormField>
         </div>
+      </div>
+
+      <div className="app-divider pt-4">
+        <p className="text-xs uppercase tracking-wide text-foreground-soft font-medium mb-3">
+          Tenant login
+        </p>
+        <input type="hidden" name="loginEnabled" value={loginEnabled ? "on" : "off"} />
+        <div className="flex items-center gap-3 mb-4">
+          <input
+            id="loginEnabled"
+            name="loginEnabled"
+            type="checkbox"
+            checked={loginEnabled}
+            onChange={(event) => setLoginEnabled(event.target.checked)}
+            className="h-4 w-4"
+          />
+          <label htmlFor="loginEnabled" className="text-sm text-foreground">
+            Enable tenant login
+          </label>
+        </div>
+
+        {loginEnabled ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <FormField label="Tenant username" htmlFor="username">
+              <Input
+                id="username"
+                name="username"
+                defaultValue={defaultValues?.username ?? ""}
+                placeholder="e.g. tenant01"
+                required={loginEnabled}
+              />
+            </FormField>
+            <FormField label="Password" htmlFor="password">
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                defaultValue={defaultValues?.password ?? ""}
+                placeholder="Enter a password"
+                required={loginEnabled}
+              />
+            </FormField>
+          </div>
+        ) : (
+          <div className="text-sm text-foreground-faint">
+            Tenant portal login is disabled. Enable it to set a username and password.
+          </div>
+        )}
+        <p className="text-xs text-foreground-faint mt-1">
+          Enable this if you want the tenant to sign in and access the tenant portal.
+        </p>
       </div>
 
       <div className="app-divider pt-4">

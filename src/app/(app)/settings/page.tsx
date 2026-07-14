@@ -12,7 +12,16 @@ export default async function SettingsPage() {
   const session = await auth();
   const user = session?.user;
   const isAdmin = user?.role === "ADMIN";
+  const isTenant = user?.role === "TENANT";
   const allUsers = isAdmin ? await getAllUsers() : [];
+
+  const accountRoleLabel = isAdmin ? "Admin" : isTenant ? "Tenant" : "Member";
+  const accountBadgeVariant = isAdmin ? "admin" : isTenant ? "accent" : "default";
+  const accountDescription = isAdmin
+    ? "As an admin, you can delete entries and view the full family member list below."
+    : isTenant
+    ? "You can access the tenant portal and manage your rental documents and receipts."
+    : "You can view all data and add or edit entries. Only an admin can delete entries.";
 
   return (
     <div className="flex flex-col gap-6">
@@ -41,16 +50,12 @@ export default async function SettingsPage() {
             </span>
             <div>
               <p className="text-sm font-medium text-foreground">{user?.name}</p>
-              <Badge variant={isAdmin ? "admin" : "default"} className="mt-1">
-                {isAdmin ? "Admin" : "Member"}
+              <Badge variant={accountBadgeVariant} className="mt-1">
+                {accountRoleLabel}
               </Badge>
             </div>
           </div>
-          <p className="text-xs text-foreground-faint mt-4">
-            {isAdmin
-              ? "As an admin, you can delete entries and view the full family member list below."
-              : "You can view all data and add or edit entries. Only an admin can delete entries."}
-          </p>
+          <p className="text-xs text-foreground-faint mt-4">{accountDescription}</p>
         </CardContent>
       </Card>
 
@@ -73,8 +78,8 @@ export default async function SettingsPage() {
                     <p className="text-sm font-medium text-foreground">{u.name}</p>
                     <p className="text-xs text-foreground-soft">@{u.username}</p>
                   </div>
-                  <Badge variant={u.role === "ADMIN" ? "admin" : "default"}>
-                    {u.role === "ADMIN" ? "Admin" : "Member"}
+                  <Badge variant={u.role === "ADMIN" ? "admin" : u.role === "TENANT" ? "accent" : "default"}>
+                    {u.role === "ADMIN" ? "Admin" : u.role === "TENANT" ? "Tenant" : "Member"}
                   </Badge>
                 </div>
               ))}

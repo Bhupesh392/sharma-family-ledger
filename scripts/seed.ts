@@ -10,9 +10,11 @@
  */
 import "dotenv/config";
 import bcrypt from "bcryptjs";
+import { eq } from "drizzle-orm";
 import { db } from "../src/lib/db";
 import {
   users,
+  tenants,
   e392Rent,
   e392Utilities,
   chitrakootRent,
@@ -48,6 +50,35 @@ async function main() {
         role: m.role,
       })
       .onConflictDoNothing();
+  }
+
+  console.log("Seeding tenant directory...");
+  const TENANTS = [
+    {
+      name: "Sushmita Sharma",
+      phone: null,
+      email: null,
+      occupation: null,
+      policeVerified: false,
+    },
+  ];
+
+  for (const tenant of TENANTS) {
+    const [existingTenant] = await db
+      .select()
+      .from(tenants)
+      .where(eq(tenants.name, tenant.name))
+      .limit(1);
+
+    if (!existingTenant) {
+      await db.insert(tenants).values({
+        name: tenant.name,
+        phone: tenant.phone,
+        email: tenant.email,
+        occupation: tenant.occupation,
+        policeVerified: tenant.policeVerified,
+      });
+    }
   }
 
   console.log("Importing E-392 Ground Floor rent...");
