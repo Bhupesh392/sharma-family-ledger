@@ -8,7 +8,14 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const NAV_ITEMS = [
+type SidebarItem = {
+  href: string;
+  label: string;
+  icon: typeof LayoutDashboard;
+  adminOnly?: boolean;
+};
+
+const NAV_ITEMS: SidebarItem[] = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
   { href: "/properties", label: "Properties", icon: Building2 },
   { href: "/tenants", label: "Tenants", icon: Users },
@@ -20,7 +27,7 @@ const NAV_ITEMS = [
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
-const TENANT_NAV_ITEMS = [
+const TENANT_NAV_ITEMS: SidebarItem[] = [
   { href: "/tenant", label: "My property", icon: LayoutDashboard },
   { href: "/documents", label: "Documents", icon: FileText },
   { href: "/settings", label: "Settings", icon: Settings },
