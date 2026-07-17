@@ -24,9 +24,9 @@ async function requireAdmin() {
 async function getTenantPropertyId(tenantId: number) {
   const [activeTenancy] = await db
     .select()
-    .from(tenancies)
-    .where(eq(tenancies.tenantId, tenantId), eq(tenancies.status, "ACTIVE"))
-    .limit(1);
+  .from(tenancies)
+  .where(and(eq(tenancies.tenantId, tenantId), eq(tenancies.status, "ACTIVE"))) // This line is now fixed
+  .limit(1);
 
   return activeTenancy?.propertyId ?? null;
 }
