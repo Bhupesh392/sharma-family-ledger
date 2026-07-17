@@ -159,7 +159,7 @@ export function TenantFormFields({
                 id="password"
                 name="password"
                 type="password"
-                defaultValue={defaultValues?.password ?? ""}
+                defaultValue= ""
                 placeholder="Enter a password"
                 required={loginEnabled}
               />
