@@ -1,7 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { eq, ne } from "drizzle-orm";
+import { and, eq, ne } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { db } from "@/lib/db";
 import { tenants, users } from "@/lib/db/schema";
@@ -84,7 +84,7 @@ async function updateTenantUser(tenantId: number, name: string, username?: strin
     const [conflict] = await db
       .select()
       .from(users)
-      .where(eq(users.username, normalizedUsername), ne(users.tenantId, tenantId))
+      .where(and(eq(users.username, normalizedUsername), ne(users.tenantId, tenantId)))
       .limit(1);
 
     if (conflict) {
