@@ -52,12 +52,13 @@ export default async function DashboardPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 animate-fade-in">
+      {/* Page header */}
       <div>
-        <h1 className="font-display text-2xl lg:text-3xl font-semibold text-foreground">
+        <h1 className="font-display text-2xl lg:text-3xl font-semibold text-foreground tracking-tight">
           Dashboard
         </h1>
-        <p className="text-sm text-foreground-soft mt-1">
+        <p className="text-sm text-foreground-soft mt-1.5">
           A real-time overview of rental income, expenses, and occupancy.
         </p>
       </div>
@@ -131,7 +132,7 @@ export default async function DashboardPage() {
         </Card>
       </div>
 
-      {/* Recent activity */}
+      {/* Recent rent entries */}
       <Card>
         <CardHeader>
           <CardTitle>Recent rent entries</CardTitle>
@@ -144,10 +145,10 @@ export default async function DashboardPage() {
               {summary.recentRent.map((r, i) => (
                 <div
                   key={r.id}
-                  className={`flex items-center justify-between py-2.5 ${i !== 0 ? "app-divider" : ""}`}
+                  className={`flex items-center justify-between py-3 ${i !== 0 ? "app-divider" : ""}`}
                 >
                   <div className="flex items-center gap-3">
-                    <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-100 text-indigo shrink-0">
+                    <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-50 text-primary shrink-0">
                       <Wallet className="h-4 w-4" />
                     </span>
                     <div>
@@ -169,9 +170,10 @@ export default async function DashboardPage() {
           )}
           <Link
             href="/income"
-            className="text-sm text-indigo flex items-center gap-1 mt-3 hover:underline"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary-soft transition-colors mt-3 group"
           >
-            View all income <ArrowRight className="h-3.5 w-3.5" />
+            View all income
+            <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
           </Link>
         </CardContent>
       </Card>
@@ -184,14 +186,14 @@ export default async function DashboardPage() {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
-                  <Activity className="h-4 w-4 text-indigo" />
+                  <Activity className="h-4 w-4 text-primary" />
                   Recent activity
                 </CardTitle>
                 <Link
                   href="/activity"
-                  className="text-xs text-indigo hover:underline"
+                  className="text-xs font-medium text-primary hover:text-primary-soft transition-colors"
                 >
-                  Full history →
+                  Full history &rarr;
                 </Link>
               </div>
             </CardHeader>
@@ -214,33 +216,33 @@ export default async function DashboardPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Eye className="h-4 w-4 text-indigo" />
+                <Eye className="h-4 w-4 text-primary" />
                 Portal views
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 gap-3 mb-4">
-                <div>
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="p-3 rounded-xl bg-surface-muted">
                   <p className="text-xs text-foreground-soft">Total views</p>
-                  <p className="text-2xl font-display font-semibold text-foreground font-mono-num">
+                  <p className="text-2xl font-display font-semibold text-foreground font-mono-num mt-1">
                     {pageViewStats.totalViews.toLocaleString()}
                   </p>
                 </div>
-                <div>
+                <div className="p-3 rounded-xl bg-surface-muted">
                   <p className="text-xs text-foreground-soft">Unique sessions</p>
-                  <p className="text-2xl font-display font-semibold text-foreground font-mono-num">
+                  <p className="text-2xl font-display font-semibold text-foreground font-mono-num mt-1">
                     {pageViewStats.uniqueSessions.toLocaleString()}
                   </p>
                 </div>
-                <div>
+                <div className="p-3 rounded-xl bg-surface-muted">
                   <p className="text-xs text-foreground-soft">Active last 7d</p>
-                  <p className="text-2xl font-display font-semibold text-foreground font-mono-num">
+                  <p className="text-2xl font-display font-semibold text-foreground font-mono-num mt-1">
                     {pageViewStats.recentUsers}
                   </p>
                 </div>
-                <div>
+                <div className="p-3 rounded-xl bg-surface-muted">
                   <p className="text-xs text-foreground-soft">Top page</p>
-                  <p className="text-sm font-medium text-foreground truncate">
+                  <p className="text-sm font-medium text-foreground truncate mt-1">
                     {pageViewStats.pageBreakdown[0]?.page ?? "—"}
                   </p>
                 </div>

@@ -19,40 +19,52 @@ export function KpiCard({
   value: string;
   icon: React.ReactNode;
   tone?: "default" | "income" | "expense" | "pending";
-  trend?: number; // percent change, positive or negative
+  trend?: number;
   comparisonLabel?: string;
   sparkline?: SparkPoint[];
 }) {
   const toneClasses = {
-    default: "text-indigo bg-indigo-100",
-    income: "text-income bg-emerald-100",
+    default: "text-primary bg-primary-50",
+    income: "text-income bg-emerald-50",
     expense: "text-expense bg-expense/10",
     pending: "text-pending bg-pending/10",
   }[tone];
 
   const sparkColor = {
-    default: "var(--indigo)",
-    income: "var(--income)",
-    expense: "var(--expense)",
-    pending: "var(--pending)",
+    default: "var(--color-primary)",
+    income: "var(--color-income)",
+    expense: "var(--color-expense)",
+    pending: "var(--color-pending)",
   }[tone];
 
   const isPositive = (trend ?? 0) >= 0;
 
   return (
-    <div className="app-card app-card-hover relative overflow-hidden p-5">
-      <div className="flex items-start justify-between gap-3 overflow-x-auto">
-        <div className="min-w-0">
-          <p className="text-xs font-medium text-foreground-soft">{label}</p>
-          <p className="font-display text-xl sm:text-2xl font-semibold text-foreground mt-1.5 font-mono-num whitespace-nowrap">
+    <div className="app-card app-card-hover relative overflow-hidden p-5 group">
+      {/* Subtle gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-surface via-transparent to-transparent opacity-50 pointer-events-none" />
+
+      {/* Top accent line */}
+      <div className={cn(
+        "absolute top-0 left-4 right-4 h-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300",
+        tone === "default" && "bg-primary/40",
+        tone === "income" && "bg-income/40",
+        tone === "expense" && "bg-expense/40",
+        tone === "pending" && "bg-pending/40",
+      )} />
+
+      <div className="flex items-start justify-between gap-3 relative">
+        <div className="min-w-0 flex-1">
+          <p className="text-xs font-medium text-foreground-soft uppercase tracking-wider">{label}</p>
+          <p className="font-display text-2xl sm:text-3xl font-semibold text-foreground mt-2 font-mono-num whitespace-nowrap">
             {value}
           </p>
           {trend !== undefined && (
-            <div className="flex items-center gap-1 mt-2">
+            <div className="flex items-center gap-1.5 mt-2.5">
               <span
                 className={cn(
-                  "inline-flex items-center gap-0.5 text-xs font-medium",
-                  isPositive ? "text-income" : "text-expense"
+                  "inline-flex items-center gap-0.5 text-xs font-semibold px-1.5 py-0.5 rounded-md",
+                  isPositive ? "text-income bg-emerald-50" : "text-expense bg-expense/10"
                 )}
               >
                 {isPositive ? (
@@ -68,22 +80,26 @@ export function KpiCard({
             </div>
           )}
         </div>
-        <div className={cn("flex h-10 w-10 items-center justify-center rounded-xl shrink-0 [&_svg]:h-5 [&_svg]:w-5", toneClasses)}>
+        <div className={cn(
+          "flex h-11 w-11 items-center justify-center rounded-xl shrink-0 [&_svg]:h-5 [&_svg]:w-5 transition-transform duration-200 group-hover:scale-110",
+          toneClasses
+        )}>
           {icon}
         </div>
       </div>
 
       {sparkline && sparkline.length > 1 && (
-        <div className="h-10 mt-3 -mx-1">
+        <div className="h-12 mt-3 -mx-1 relative">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={sparkline} margin={{ top: 4, right: 0, bottom: 0, left: 0 }}>
               <Line
                 type="monotone"
                 dataKey="value"
                 stroke={sparkColor}
-                strokeWidth={2}
+                strokeWidth={2.5}
                 dot={false}
-                isAnimationActive={false}
+                isAnimationActive={true}
+                animationDuration={800}
               />
             </LineChart>
           </ResponsiveContainer>

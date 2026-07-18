@@ -7,7 +7,7 @@ export function SearchBar() {
       <input
         type="search"
         placeholder="Search properties, tenants…"
-        className="h-9 w-full rounded-[var(--radius-control)] border border-border bg-surface-muted pl-9 pr-3 text-sm text-foreground placeholder:text-foreground-faint focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo focus-visible:bg-surface transition-colors"
+        className="h-9 w-full rounded-[var(--radius-control)] border border-border bg-surface-muted pl-9 pr-3 text-sm text-foreground placeholder:text-foreground-faint transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30 focus-visible:border-primary focus-visible:bg-surface focus-visible:shadow-glow"
       />
     </div>
   );

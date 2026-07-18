@@ -44,7 +44,7 @@ const ENTITY_LABELS: Record<string, string> = {
 
 const ACTION_STYLES = {
   CREATE: { icon: Plus, badge: "success" as const, label: "Added" },
-  UPDATE: { icon: Pencil, badge: "indigo" as const, label: "Edited" },
+  UPDATE: { icon: Pencil, badge: "primary" as const, label: "Edited" },
   DELETE: { icon: Trash2, badge: "overdue" as const, label: "Deleted" },
 };
 
@@ -115,7 +115,7 @@ export function ActivityItem({
           className={cn(
             "absolute -bottom-0.5 -right-0.5 flex h-4 w-4 items-center justify-center rounded-full",
             entry.action === "CREATE" && "bg-emerald-100 text-income",
-            entry.action === "UPDATE" && "bg-indigo-100 text-indigo",
+            entry.action === "UPDATE" && "bg-primary-100 text-primary",
             entry.action === "DELETE" && "bg-expense/10 text-expense"
           )}
         >

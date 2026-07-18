@@ -2,97 +2,116 @@
 @import "tw-animate-css";
 
 /*
-  Design system: fintech-grade property management dashboard.
-  Indigo primary, emerald secondary, soothing neutral surfaces.
-  Light + dark themes via CSS variables, toggled by next-themes
-  adding/removing the .dark class on <html>.
-*/
+ * ── Sharma Family Ledger — Design System ──────────────────────────
+ * A premium, modern property management dashboard with a sophisticated
+ * warm-neutral palette, subtle glassmorphism, and refined micro-interactions.
+ *
+ * Primary:   Warm Indigo (#6366f1 → #818cf8)
+ * Accent:    Teal (#0d9488 → #2dd4bf)
+ * Surfaces:  Warm off-white / stone-900
+ * Typography: Inter (sans), Lexend (display), JetBrains Mono (mono)
+ * ──────────────────────────────────────────────────────────────────
+ */
 
 :root {
   /* Core palette */
-  --indigo: #4f46e5;
-  --indigo-soft: #6366f1;
-  --indigo-100: #e0e7ff;
-  --emerald: #10b981;
-  --emerald-soft: #34d399;
-  --emerald-100: #d1fae5;
+  --primary:       #6366f1;
+  --primary-soft:  #818cf8;
+  --primary-100:   #eef2ff;
+  --primary-50:    #f5f7ff;
+  --accent:        #0d9488;
+  --accent-soft:   #2dd4bf;
+  --accent-100:    #ccfbf1;
+  --accent-50:     #f0fdfa;
 
   /* Status colors */
-  --income: #10b981;
-  --expense: #f43f5e;
-  --pending: #f59e0b;
-  --paid: #10b981;
-  --overdue: #e11d48;
+  --income:        #059669;
+  --expense:       #e11d48;
+  --pending:       #d97706;
+  --paid:          #059669;
+  --overdue:       #be123c;
 
   /* Light theme surfaces */
-  --background: #f8fafc;
-  --surface: #ffffff;
-  --surface-muted: #f1f5f9;
-  --foreground: #0f172a;
-  --foreground-soft: #475569;
-  --foreground-faint: #94a3b8;
-  --border: #e2e8f0;
-  --border-strong: #cbd5e1;
+  --background:       #f7f6f3;
+  --surface:          #ffffff;
+  --surface-muted:    #f0efec;
+  --surface-raised:   #ffffff;
+  --foreground:       #1c1917;
+  --foreground-soft:  #78716c;
+  --foreground-faint: #a8a29e;
+  --border:           #e7e5e4;
+  --border-strong:    #d6d3d1;
 
   --radius-card: 16px;
-  --radius-control: 12px;
-  --shadow-soft: 0 1px 2px rgba(15, 23, 42, 0.04), 0 4px 16px rgba(15, 23, 42, 0.04);
-  --shadow-raised: 0 2px 4px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.08);
+  --radius-control: 10px;
+
+  --shadow-soft:  0 1px 3px rgba(28, 25, 23, 0.06), 0 4px 16px rgba(28, 25, 23, 0.04);
+  --shadow-raised: 0 2px 8px rgba(28, 25, 23, 0.08), 0 8px 32px rgba(28, 25, 23, 0.06);
+  --shadow-overlay: 0 4px 24px rgba(28, 25, 23, 0.12), 0 12px 48px rgba(28, 25, 23, 0.08);
+  --shadow-glow:   0 0 20px rgba(99, 102, 241, 0.15);
 }
 
 .dark {
-  --background: #0f172a;
-  --surface: #1e293b;
-  --surface-muted: #1a2436;
-  --foreground: #f1f5f9;
-  --foreground-soft: #94a3b8;
-  --foreground-faint: #64748b;
-  --border: #334155;
-  --border-strong: #475569;
+  --primary:       #818cf8;
+  --primary-soft:  #a5b4fc;
+  --primary-100:   #1e1b4b;
+  --primary-50:    #1e1b4b;
+  --accent:        #2dd4bf;
+  --accent-soft:   #5eead4;
+  --accent-100:    #134e4a;
+  --accent-50:     #134e4a;
 
-  --indigo: #6366f1;
-  --indigo-soft: #818cf8;
-  --indigo-100: #312e81;
-  --emerald: #34d399;
-  --emerald-soft: #6ee7b7;
-  --emerald-100: #064e3b;
+  --income:        #34d399;
+  --expense:       #fb7185;
+  --pending:       #fbbf24;
+  --paid:          #34d399;
+  --overdue:       #fb7185;
 
-  --income: #34d399;
-  --expense: #fb7185;
-  --pending: #fbbf24;
-  --paid: #34d399;
-  --overdue: #fb7185;
+  --background:       #0c0a09;
+  --surface:          #1c1917;
+  --surface-muted:    #292524;
+  --surface-raised:   #292524;
+  --foreground:       #f5f5f4;
+  --foreground-soft:  #a8a29e;
+  --foreground-faint: #78716c;
+  --border:           #292524;
+  --border-strong:    #44403c;
 
-  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.2), 0 4px 16px rgba(0, 0, 0, 0.24);
-  --shadow-raised: 0 2px 4px rgba(0, 0, 0, 0.24), 0 8px 24px rgba(0, 0, 0, 0.32);
+  --shadow-soft:  0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.2);
+  --shadow-raised: 0 2px 8px rgba(0, 0, 0, 0.4), 0 8px 32px rgba(0, 0, 0, 0.3);
+  --shadow-overlay: 0 4px 24px rgba(0, 0, 0, 0.5), 0 12px 48px rgba(0, 0, 0, 0.4);
+  --shadow-glow:   0 0 20px rgba(129, 140, 248, 0.12);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-surface: var(--surface);
-  --color-surface-muted: var(--surface-muted);
-  --color-foreground: var(--foreground);
-  --color-foreground-soft: var(--foreground-soft);
+  --color-background:       var(--background);
+  --color-surface:          var(--surface);
+  --color-surface-muted:    var(--surface-muted);
+  --color-surface-raised:   var(--surface-raised);
+  --color-foreground:       var(--foreground);
+  --color-foreground-soft:  var(--foreground-soft);
   --color-foreground-faint: var(--foreground-faint);
-  --color-border: var(--border);
-  --color-border-strong: var(--border-strong);
+  --color-border:           var(--border);
+  --color-border-strong:    var(--border-strong);
 
-  --color-indigo: var(--indigo);
-  --color-indigo-soft: var(--indigo-soft);
-  --color-indigo-100: var(--indigo-100);
-  --color-emerald: var(--emerald);
-  --color-emerald-soft: var(--emerald-soft);
-  --color-emerald-100: var(--emerald-100);
+  --color-primary:       var(--primary);
+  --color-primary-soft:  var(--primary-soft);
+  --color-primary-100:   var(--primary-100);
+  --color-primary-50:    var(--primary-50);
+  --color-accent:        var(--accent);
+  --color-accent-soft:   var(--accent-soft);
+  --color-accent-100:    var(--accent-100);
+  --color-accent-50:     var(--accent-50);
 
-  --color-income: var(--income);
+  --color-income:  var(--income);
   --color-expense: var(--expense);
   --color-pending: var(--pending);
-  --color-paid: var(--paid);
+  --color-paid:    var(--paid);
   --color-overdue: var(--overdue);
 
   --font-display: var(--font-lexend);
-  --font-sans: var(--font-inter);
-  --font-mono: var(--font-jetbrains);
+  --font-sans:    var(--font-inter);
+  --font-mono:    var(--font-jetbrains);
 }
 
 * {
@@ -110,12 +129,12 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans);
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 ::selection {
-  background: var(--indigo-100);
-  color: var(--indigo);
+  background: var(--primary-100);
+  color: var(--primary);
 }
 
 .font-display {
@@ -127,33 +146,48 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-/* Card surface: soft shadow, 16px radius, subtle border */
+/* Card surface */
 .app-card {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-soft);
-  transition: box-shadow 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+  transition: box-shadow 0.25s ease, border-color 0.25s ease, background-color 0.25s ease, transform 0.2s ease;
 }
 
 .app-card-hover:hover {
   box-shadow: var(--shadow-raised);
   border-color: var(--border-strong);
+  transform: translateY(-1px);
+}
+
+.app-card-interactive {
+  cursor: pointer;
+}
+.app-card-interactive:active {
+  transform: translateY(0px) scale(0.998);
 }
 
 .app-divider {
   border-top: 1px solid var(--border);
 }
 
-/* Glassmorphism — used sparingly: top bar, mobile drawer overlay only */
+/* Glassmorphism */
 .glass-surface {
-  background: color-mix(in srgb, var(--surface) 72%, transparent);
-  backdrop-filter: blur(12px) saturate(160%);
-  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-bottom: 1px solid var(--border);
+}
+
+.glass-surface-strong {
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  backdrop-filter: blur(20px) saturate(200%);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
 }
 
 :focus-visible {
-  outline: 2px solid var(--indigo);
+  outline: 2px solid var(--primary);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -168,29 +202,88 @@ body {
 }
 
 @keyframes fade-rise {
-  0% {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  0%   { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
 }
 
-.animate-fade-rise {
-  animation: fade-rise 0.18s ease-out;
+@keyframes fade-in {
+  0%   { opacity: 0; }
+  100% { opacity: 1; }
 }
 
-/* Sparkline watermark — the signature motif: a faint oversized version
-   of each KPI card's own trend line, anchored bottom-right. */
+@keyframes scale-in {
+  0%   { opacity: 0; transform: scale(0.96); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slide-up {
+  0%   { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.4; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-fade-rise { animation: fade-rise 0.25s ease-out; }
+.animate-fade-in   { animation: fade-in 0.2s ease-out; }
+.animate-scale-in  { animation: scale-in 0.2s ease-out; }
+.animate-slide-up  { animation: slide-up 0.3s ease-out; }
+.animate-pulse-dot { animation: pulse-dot 2s ease-in-out infinite; }
+
+/* Skeleton shimmer */
+.skeleton {
+  background: linear-gradient(90deg, var(--surface-muted) 25%, var(--surface) 50%, var(--surface-muted) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Status dots */
+.status-dot {
+  display: inline-block;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+}
+.status-dot-income  { background: var(--income); }
+.status-dot-expense { background: var(--expense); }
+.status-dot-pending { background: var(--pending); }
+.status-dot-paid    { background: var(--paid); }
+.status-dot-overdue { background: var(--overdue); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--foreground-faint); }
+
+/* Sparkline watermark */
 .sparkline-watermark {
   position: absolute;
-  right: -8px;
-  bottom: -8px;
-  opacity: 0.08;
+  right: -8px; bottom: -8px;
+  opacity: 0.06;
   pointer-events: none;
 }
-.dark .sparkline-watermark {
-  opacity: 0.14;
+.dark .sparkline-watermark { opacity: 0.12; }
+
+/* Grid pattern */
+.bg-grid-pattern {
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
 }

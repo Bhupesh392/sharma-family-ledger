@@ -60,7 +60,7 @@ export function PropertyCard({
             <p className="font-display font-semibold text-foreground truncate">
               {property.name}
             </p>
-            <Badge variant="indigo" className="shrink-0">
+            <Badge variant="primary" className="shrink-0">
               {property.type === "SHOP" ? "Shop" : "Residential"}
             </Badge>
           </div>

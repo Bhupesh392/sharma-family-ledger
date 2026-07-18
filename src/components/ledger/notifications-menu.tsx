@@ -44,7 +44,7 @@ export function NotificationsMenu({ notifications }: { notifications: Notificati
                       "mt-1.5 h-1.5 w-1.5 rounded-full shrink-0",
                       n.tone === "overdue" && "bg-overdue",
                       n.tone === "pending" && "bg-pending",
-                      n.tone === "default" && "bg-indigo"
+                      n.tone === "default" && "bg-primary"
                     )}
                   />
                   <div className="min-w-0">
