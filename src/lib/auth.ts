@@ -18,7 +18,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     Credentials({
       name: "Family Login",
       credentials: {
-        username: { label: "Username", type: "text" },
+        username: { label: "Username or email", type: "text" },
         password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
@@ -43,6 +43,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           id: String(user.id),
           name: user.name,
           role: user.role,
+          tenantId: user.tenantId ? String(user.tenantId) : undefined,
         };
       },
     }),
@@ -52,13 +53,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (user) {
         token.id = user.id;
         token.role = user.role;
+        token.tenantId = user.tenantId;
       }
       return token;
     },
     session: async ({ session, token }) => {
       if (session.user) {
         session.user.id = token.id as string;
-        session.user.role = token.role as "ADMIN" | "MEMBER";
+        session.user.role = token.role as "ADMIN" | "MEMBER" | "TENANT";
+        session.user.tenantId = token.tenantId as string | undefined;
       }
       return session;
     },

@@ -10,7 +10,7 @@ import {
   boolean,
 } from "drizzle-orm/pg-core";
 
-export const roleEnum = pgEnum("role", ["ADMIN", "MEMBER"]);
+export const roleEnum = pgEnum("role", ["ADMIN", "MEMBER", "TENANT"]);
 export const floorEnum = pgEnum("floor", ["GROUND", "FIRST", "SECOND"]);
 export const returnStatusEnum = pgEnum("return_status", [
   "PENDING",
@@ -54,6 +54,7 @@ export const users = pgTable("users", {
   username: text("username").notNull().unique(),
   passwordHash: text("password_hash").notNull(),
   role: roleEnum("role").notNull().default("MEMBER"),
+  tenantId: integer("tenant_id").references(() => tenants.id),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
@@ -92,6 +93,7 @@ export const tenants = pgTable("tenants", {
   emergencyContactPhone: text("emergency_contact_phone"),
   policeVerified: boolean("police_verified").notNull().default(false),
   policeVerificationDate: date("police_verification_date"),
+  passwordHash: text("password_hash"),
   notes: text("notes"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),

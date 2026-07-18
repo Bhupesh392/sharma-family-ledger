@@ -111,30 +111,32 @@ export function DocumentCard({
           <ExternalLink className="h-3.5 w-3.5" />
           {opening ? "Opening…" : "Open in Drive"}
         </Button>
-        <EntryFormDialog
-          trigger={
-            <Button variant="ghost" size="icon" aria-label="Edit document">
-              <Pencil className="h-4 w-4 text-foreground-soft" />
-            </Button>
-          }
-          title="Edit document"
-          description="Update this document's details or link."
-          action={(formData) => updateDocument(doc.id, formData)}
-          successMessage="Document updated"
-          submitLabel="Save changes"
-        >
-          <DocumentFormFields
-            properties={properties}
-            tenants={tenants}
-            defaultValues={{
-              name: doc.name,
-              docType: doc.docType,
-              propertyId: doc.propertyId,
-              tenantId: doc.tenantId,
-              notes: doc.notes,
-            }}
-          />
-        </EntryFormDialog>
+        {isAdmin && (
+          <EntryFormDialog
+            trigger={
+              <Button variant="ghost" size="icon" aria-label="Edit document">
+                <Pencil className="h-4 w-4 text-foreground-soft" />
+              </Button>
+            }
+            title="Edit document"
+            description="Update this document's details or link."
+            action={(formData) => updateDocument(doc.id, formData)}
+            successMessage="Document updated"
+            submitLabel="Save changes"
+          >
+            <DocumentFormFields
+              properties={properties}
+              tenants={tenants}
+              defaultValues={{
+                name: doc.name,
+                docType: doc.docType,
+                propertyId: doc.propertyId,
+                tenantId: doc.tenantId,
+                notes: doc.notes,
+              }}
+            />
+          </EntryFormDialog>
+        )}
         {isAdmin && (
           <DeleteEntryButton
             onDelete={() => deleteDocument(doc.id)}

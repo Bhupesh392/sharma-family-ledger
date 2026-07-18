@@ -1,9 +1,9 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db } from "@/lib/db";
-import { documents } from "@/lib/db/schema";
+import { documents, tenancies } from "@/lib/db/schema";
 import { auth } from "@/lib/auth";
 import { documentSchema } from "@/lib/validations";
 import { encrypt, decrypt } from "@/lib/crypto";
@@ -21,6 +21,16 @@ async function requireAdmin() {
   return user;
 }
 
+async function getTenantPropertyId(tenantId: number) {
+  const [activeTenancy] = await db
+    .select()
+  .from(tenancies)
+  .where(and(eq(tenancies.tenantId, tenantId), eq(tenancies.status, "ACTIVE"))) // This line is now fixed
+  .limit(1);
+
+  return activeTenancy?.propertyId ?? null;
+}
+
 function parseForm(formData: FormData) {
   return documentSchema.parse({
     name: formData.get("name"),
@@ -36,9 +46,13 @@ export async function addDocument(formData: FormData) {
   const user = await requireUser();
   const parsed = parseForm(formData);
 
+  if (user.role === "TENANT" && parsed.docType !== "RECEIPT") {
+    throw new Error("Tenants may only upload receipt documents.");
+  }
+
   const encryptedUrl = encrypt(parsed.url);
 
-  const [row] = await db.insert(documents).values({
+  const values = {
     name: parsed.name,
     docType: parsed.docType,
     encryptedUrl,
@@ -46,11 +60,23 @@ export async function addDocument(formData: FormData) {
     tenantId: parsed.tenantId ?? null,
     notes: parsed.notes || null,
     uploadedById: Number(user.id),
-  }).returning();
+  };
+
+  if (user.role === "TENANT") {
+    const tenantId = Number(user.tenantId);
+    values.tenantId = tenantId;
+    values.propertyId = await getTenantPropertyId(tenantId);
+    values.docType = "RECEIPT";
+  }
+
+  const [row] = await db.insert(documents).values(values).returning();
 
   await logActivity({
-    userId: Number(user.id), userName: user.name ?? user.id,
-    action: "CREATE", entityType: "DOCUMENT", entityId: row.id,
+    userId: Number(user.id),
+    userName: user.name ?? user.id,
+    action: "CREATE",
+    entityType: "DOCUMENT",
+    entityId: row.id,
     entityLabel: `${parsed.name} (${parsed.docType})`,
     newValues: { name: parsed.name, docType: parsed.docType },
   });
@@ -59,7 +85,7 @@ export async function addDocument(formData: FormData) {
 }
 
 export async function updateDocument(id: number, formData: FormData) {
-  const user = await requireUser();
+  const user = await requireAdmin();
   const parsed = parseForm(formData);
   const [old] = await db.select().from(documents).where(eq(documents.id, id)).limit(1);
 
@@ -76,8 +102,11 @@ export async function updateDocument(id: number, formData: FormData) {
   }).where(eq(documents.id, id));
 
   await logActivity({
-    userId: Number(user.id), userName: user.name ?? user.id,
-    action: "UPDATE", entityType: "DOCUMENT", entityId: id,
+    userId: Number(user.id),
+    userName: user.name ?? user.id,
+    action: "UPDATE",
+    entityType: "DOCUMENT",
+    entityId: id,
     entityLabel: parsed.name,
     oldValues: old ? { name: old.name, docType: old.docType } : null,
     newValues: { name: parsed.name, docType: parsed.docType },
@@ -92,8 +121,11 @@ export async function deleteDocument(id: number) {
   await db.delete(documents).where(eq(documents.id, id));
 
   await logActivity({
-    userId: Number(user.id), userName: user.name ?? user.id,
-    action: "DELETE", entityType: "DOCUMENT", entityId: id,
+    userId: Number(user.id),
+    userName: user.name ?? user.id,
+    action: "DELETE",
+    entityType: "DOCUMENT",
+    entityId: id,
     entityLabel: old ? old.name : `Document #${id}`,
     oldValues: old ? { name: old.name, docType: old.docType } : null,
   });
@@ -101,14 +133,18 @@ export async function deleteDocument(id: number) {
   revalidatePath("/documents");
 }
 
-/**
- * Decrypts and returns the document URL — called from an API route so
- * the raw URL never appears in client-side JS bundles or RSC payloads.
- * Any authenticated user can open any document (per the product decision).
- */
 export async function getDocumentUrl(id: number): Promise<string> {
-  await requireUser();
+  const session = await auth();
+  if (!session?.user) throw new Error("Not signed in");
+
   const [doc] = await db.select().from(documents).where(eq(documents.id, id)).limit(1);
   if (!doc) throw new Error("Document not found");
+
+  if (session.user.role === "TENANT" && session.user.tenantId) {
+    if (doc.tenantId !== Number(session.user.tenantId)) {
+      throw new Error("Access denied");
+    }
+  }
+
   return decrypt(doc.encryptedUrl);
 }

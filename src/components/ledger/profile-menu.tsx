@@ -10,7 +10,7 @@ export function ProfileMenu({
   role,
 }: {
   name: string;
-  role: "ADMIN" | "MEMBER";
+  role: "ADMIN" | "MEMBER" | "TENANT";
 }) {
   const initials = name
     .split(" ")
@@ -40,8 +40,11 @@ export function ProfileMenu({
         >
           <div className="px-3 py-2">
             <p className="text-sm font-medium text-foreground">{name}</p>
-            <Badge variant={role === "ADMIN" ? "admin" : "default"} className="mt-1.5">
-              {role === "ADMIN" ? "Admin" : "Member"}
+            <Badge
+              variant={role === "ADMIN" ? "admin" : role === "TENANT" ? "accent" : "default"}
+              className="mt-1.5"
+            >
+              {role === "ADMIN" ? "Admin" : role === "TENANT" ? "Tenant" : "Member"}
             </Badge>
           </div>
           <div className="app-divider my-1" />

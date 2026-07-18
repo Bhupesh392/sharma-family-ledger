@@ -14,7 +14,7 @@ import {
   pageViews,
   documents,
 } from "@/lib/db/schema";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 
 export async function getAllUsers() {
   return db
@@ -53,7 +53,28 @@ export async function getAllProperties() {
 }
 
 export async function getAllTenants() {
-  return db.select().from(tenants).orderBy(tenants.name);
+  return db
+    .select({
+      id: tenants.id,
+      name: tenants.name,
+      phone: tenants.phone,
+      email: tenants.email,
+      idProofType: tenants.idProofType,
+      idProofNumber: tenants.idProofNumber,
+      occupation: tenants.occupation,
+      numberOfOccupants: tenants.numberOfOccupants,
+      emergencyContactName: tenants.emergencyContactName,
+      emergencyContactPhone: tenants.emergencyContactPhone,
+      policeVerified: tenants.policeVerified,
+      policeVerificationDate: tenants.policeVerificationDate,
+      notes: tenants.notes,
+      createdAt: tenants.createdAt,
+      updatedAt: tenants.updatedAt,
+      username: users.username,
+    })
+    .from(tenants)
+    .leftJoin(users, eq(users.tenantId, tenants.id))
+    .orderBy(tenants.name);
 }
 
 export async function getAllTenancies() {
@@ -268,12 +289,41 @@ export type Notification = {
   tone: "pending" | "overdue" | "default";
 };
 
-export async function getNotifications(): Promise<Notification[]> {
-  const summary = await getDashboardSummary();
+export async function getNotifications(role?: string, tenantId?: number): Promise<Notification[]> {
   const notifications: Notification[] = [];
 
   const formatAmount = (n: number) =>
     n.toLocaleString("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 });
+
+  if (role === "TENANT" && tenantId != null) {
+    const tenantNotifications = await getTenantPortalData(tenantId);
+    const tenancy = tenantNotifications.activeTenancy;
+    if (tenancy) {
+      if (tenancy.agreementStatus === "EXPIRED") {
+        notifications.push({
+          id: `agreement-expired-${tenancy.id}`,
+          title: "Your rent agreement has expired",
+          description: tenancy.agreementRenewalDate
+            ? `Renewal was due on ${tenancy.agreementRenewalDate}.`
+            : "Renew it from your tenant portal.",
+          tone: "overdue",
+        });
+      } else if (tenancy.agreementStatus === "DUE_FOR_RENEWAL") {
+        notifications.push({
+          id: `agreement-due-${tenancy.id}`,
+          title: "Your rent agreement is due for renewal",
+          description: tenancy.agreementRenewalDate
+            ? `Renewal due on ${tenancy.agreementRenewalDate}.`
+            : "Renew it from your tenant portal.",
+          tone: "pending",
+        });
+      }
+    }
+
+    return notifications;
+  }
+
+  const summary = await getDashboardSummary();
 
   if (summary.outstandingRent > 0) {
     notifications.push({
@@ -302,7 +352,6 @@ export async function getNotifications(): Promise<Notification[]> {
     });
   }
 
-  // Rent agreement renewals / expirations, one notification per affected tenant.
   const tenantsWithProperty = await getTenantsWithCurrentProperty();
   for (const tenant of tenantsWithProperty) {
     const tenancy = tenant.activeTenancy;
@@ -330,6 +379,114 @@ export async function getNotifications(): Promise<Notification[]> {
   }
 
   return notifications;
+}
+
+export async function getDocumentsForUser(role: string, tenantId?: number) {
+  if (role === "TENANT" && tenantId != null) {
+    return db
+      .select()
+      .from(documents)
+      .where(eq(documents.tenantId, tenantId))
+      .orderBy(desc(documents.createdAt));
+  }
+
+  return getAllDocuments();
+}
+
+export async function getTenantPortalData(tenantId: number) {
+  const [tenant] = await db.select().from(tenants).where(eq(tenants.id, tenantId)).limit(1);
+  if (!tenant) {
+    throw new Error("Tenant not found");
+  }
+
+  const [activeTenancy] = await db
+    .select()
+    .from(tenancies)
+    .where(and(eq(tenancies.tenantId, tenantId), eq(tenancies.status, "ACTIVE")))
+    .limit(1);
+
+  const property = activeTenancy
+    ? (await db.select().from(properties).where(eq(properties.id, activeTenancy.propertyId)).limit(1))[0]
+    : null;
+
+  const docs = await db
+    .select()
+    .from(documents)
+    .where(eq(documents.tenantId, tenantId))
+    .orderBy(desc(documents.createdAt));
+
+  const pendingActions: Notification[] = [];
+  const currentMonth = new Date().toISOString().slice(0, 7) + "-01";
+
+  if (property) {
+    const expectedRent = property.monthlyRent ? parseFloat(property.monthlyRent) : 0;
+    let rentRecordedThisMonth = false;
+
+    switch (property.rentLedger) {
+      case "E392_GROUND":
+      case "E392_FIRST":
+      case "E392_SECOND": {
+        const [rentEntry] = await db
+          .select()
+          .from(e392Rent)
+          .where(and(eq(e392Rent.propertyId, property.id), eq(e392Rent.month, currentMonth)))
+          .limit(1);
+        rentRecordedThisMonth = !!rentEntry;
+        break;
+      }
+      case "CHITRAKOOT_SHOP": {
+        const [rentEntry] = await db
+          .select()
+          .from(chitrakootRent)
+          .where(and(eq(chitrakootRent.propertyId, property.id), eq(chitrakootRent.month, currentMonth)))
+          .limit(1);
+        rentRecordedThisMonth = !!rentEntry;
+        break;
+      }
+      case "OTHER":
+      default:
+        break;
+    }
+
+    if (!rentRecordedThisMonth && expectedRent > 0) {
+      pendingActions.push({
+        id: "tenant-rent-due",
+        title: "This month's rent has not been recorded",
+        description: `Your property has a rent of ₹${expectedRent.toLocaleString("en-IN")}. Add a receipt so the owner can track it.`,
+        tone: "overdue",
+      });
+    }
+  }
+
+  if (activeTenancy) {
+    if (activeTenancy.agreementStatus === "EXPIRED") {
+      pendingActions.push({
+        id: `tenant-agreement-expired-${activeTenancy.id}`,
+        title: "Your agreement has expired",
+        description: activeTenancy.agreementRenewalDate
+          ? `Agreement renewal was due on ${activeTenancy.agreementRenewalDate}.`
+          : "Please ask the owner to renew your agreement.",
+        tone: "overdue",
+      });
+    } else if (activeTenancy.agreementStatus === "DUE_FOR_RENEWAL") {
+      pendingActions.push({
+        id: `tenant-agreement-due-${activeTenancy.id}`,
+        title: "Your agreement is due for renewal",
+        description: activeTenancy.agreementRenewalDate
+          ? `Renewal due on ${activeTenancy.agreementRenewalDate}.`
+          : "Please ask the owner to renew your agreement soon.",
+        tone: "pending",
+      });
+    }
+  }
+
+  return {
+    tenant,
+    property,
+    activeTenancy,
+    docs,
+    pendingActions,
+  };
 }
 
 // Reports: property-level profitability (rent collected per floor minus
