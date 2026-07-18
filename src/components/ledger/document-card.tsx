@@ -24,7 +24,7 @@ type Doc = {
 type Option = { id: number; name: string };
 
 const DOC_TYPE_CONFIG = {
-  AGREEMENT: { label: "Agreement", icon: FileSignature, variant: "indigo" as const },
+  AGREEMENT: { label: "Agreement", icon: FileSignature, variant: "primary" as const },
   ID_DOCUMENT: { label: "ID Document", icon: IdCard, variant: "pending" as const },
   RECEIPT: { label: "Receipt", icon: Receipt, variant: "success" as const },
   OTHER: { label: "Other", icon: FileText, variant: "default" as const },
@@ -66,7 +66,7 @@ export function DocumentCard({
     <Card className="app-card-hover p-4 flex flex-col gap-3">
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-start gap-3 min-w-0">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-100 text-indigo shrink-0 mt-0.5">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary-100 text-primary shrink-0 mt-0.5">
             <Icon className="h-4 w-4" />
           </div>
           <div className="min-w-0">

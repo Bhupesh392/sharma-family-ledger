@@ -34,7 +34,7 @@ export function PageViewTrendChart({ data }: { data: TrendPoint[] }) {
             allowDecimals={false}
           />
           <Tooltip content={<TooltipContent />} cursor={{ fill: "var(--surface-muted)" }} />
-          <Bar dataKey="count" fill="var(--indigo)" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="count" fill="var(--primary)" radius={[4, 4, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

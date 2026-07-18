@@ -45,7 +45,7 @@ export default async function SettingsPage() {
         </CardHeader>
         <CardContent>
           <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 text-indigo">
+            <span className="flex h-10 w-10 items-center justify-center rounded-full bg-primary-100 text-primary">
               <UserIcon className="h-5 w-5" />
             </span>
             <div>
@@ -63,7 +63,7 @@ export default async function SettingsPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <ShieldCheck className="h-4 w-4 text-indigo" />
+              <ShieldCheck className="h-4 w-4 text-primary" />
               Family member accounts
             </CardTitle>
           </CardHeader>

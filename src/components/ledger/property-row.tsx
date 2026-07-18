@@ -40,13 +40,13 @@ export function PropertyRow({
           // eslint-disable-next-line @next/next/no-img-element
           <img src={property.imageUrl} alt={property.name} className="h-full w-full object-cover" />
         ) : (
-          <Building2 className="h-4.5 w-4.5 text-foreground-faint" />
+          <Building2 className="h-4 w-4 text-foreground-faint" />
         )}
       </div>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <p className="font-medium text-foreground truncate">{property.name}</p>
-          <Badge variant="indigo">{property.type === "SHOP" ? "Shop" : "Residential"}</Badge>
+          <Badge variant="primary">{property.type === "SHOP" ? "Shop" : "Residential"}</Badge>
         </div>
         <p className="text-xs text-foreground-soft truncate">
           {property.tenant ? property.tenant.name : "No active tenant"}

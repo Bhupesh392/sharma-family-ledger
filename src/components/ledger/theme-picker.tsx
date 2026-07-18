@@ -32,7 +32,7 @@ export function ThemePicker() {
             className={cn(
               "flex items-center gap-2 rounded-[var(--radius-control)] border px-4 py-2.5 text-sm font-medium transition-colors",
               active
-                ? "border-indigo bg-indigo-100 text-indigo"
+                ? "border-primary bg-primary-100 text-primary"
                 : "border-border bg-surface text-foreground-soft hover:bg-surface-muted"
             )}
           >
