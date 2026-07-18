@@ -14,7 +14,7 @@ import {
   pageViews,
   documents,
 } from "@/lib/db/schema";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 
 export async function getAllUsers() {
   return db
@@ -402,7 +402,7 @@ export async function getTenantPortalData(tenantId: number) {
   const [activeTenancy] = await db
     .select()
     .from(tenancies)
-    .where(eq(tenancies.tenantId, tenantId), eq(tenancies.status, "ACTIVE"))
+    .where(and(eq(tenancies.tenantId, tenantId), eq(tenancies.status, "ACTIVE")))
     .limit(1);
 
   const property = activeTenancy
@@ -429,7 +429,7 @@ export async function getTenantPortalData(tenantId: number) {
         const [rentEntry] = await db
           .select()
           .from(e392Rent)
-          .where(eq(e392Rent.propertyId, property.id), eq(e392Rent.month, currentMonth))
+          .where(and(eq(e392Rent.propertyId, property.id), eq(e392Rent.month, currentMonth)))
           .limit(1);
         rentRecordedThisMonth = !!rentEntry;
         break;
@@ -438,7 +438,7 @@ export async function getTenantPortalData(tenantId: number) {
         const [rentEntry] = await db
           .select()
           .from(chitrakootRent)
-          .where(eq(chitrakootRent.propertyId, property.id), eq(chitrakootRent.month, currentMonth))
+          .where(and(eq(chitrakootRent.propertyId, property.id), eq(chitrakootRent.month, currentMonth)))
           .limit(1);
         rentRecordedThisMonth = !!rentEntry;
         break;
