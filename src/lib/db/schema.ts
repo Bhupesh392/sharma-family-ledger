@@ -9,6 +9,7 @@ import {
   pgEnum,
   boolean,
 } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 
 export const roleEnum = pgEnum("role", ["ADMIN", "MEMBER", "TENANT"]);
 export const floorEnum = pgEnum("floor", ["GROUND", "FIRST", "SECOND"]);
@@ -47,15 +48,25 @@ export const idProofTypeEnum = pgEnum("id_proof_type", [
   "OTHER",
 ]);
 
-// ---------- Users ----------
-export const users = pgTable("users", {
+// ---------- Tenants ----------
+// A tenant is a person, independent of which property they currently rent.
+export const tenants = pgTable("tenants", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
-  username: text("username").notNull().unique(),
-  passwordHash: text("password_hash").notNull(),
-  role: roleEnum("role").notNull().default("MEMBER"),
-  tenantId: integer("tenant_id").references(() => tenants.id),
+  phone: text("phone"),
+  email: text("email"),
+  idProofType: idProofTypeEnum("id_proof_type"),
+  idProofNumber: text("id_proof_number"),
+  occupation: text("occupation"),
+  numberOfOccupants: integer("number_of_occupants"),
+  emergencyContactName: text("emergency_contact_name"),
+  emergencyContactPhone: text("emergency_contact_phone"),
+  policeVerified: boolean("police_verified").notNull().default(false),
+  policeVerificationDate: date("police_verification_date"),
+  passwordHash: text("password_hash"),
+  notes: text("notes"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
 // ---------- Properties ----------
@@ -78,25 +89,15 @@ export const properties = pgTable("properties", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
-// ---------- Tenants ----------
-// A tenant is a person, independent of which property they currently rent.
-export const tenants = pgTable("tenants", {
+// ---------- Users ----------
+export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
-  phone: text("phone"),
-  email: text("email"),
-  idProofType: idProofTypeEnum("id_proof_type"),
-  idProofNumber: text("id_proof_number"),
-  occupation: text("occupation"),
-  numberOfOccupants: integer("number_of_occupants"),
-  emergencyContactName: text("emergency_contact_name"),
-  emergencyContactPhone: text("emergency_contact_phone"),
-  policeVerified: boolean("police_verified").notNull().default(false),
-  policeVerificationDate: date("police_verification_date"),
-  passwordHash: text("password_hash"),
-  notes: text("notes"),
+  username: text("username").notNull().unique(),
+  passwordHash: text("password_hash").notNull(),
+  role: roleEnum("role").notNull().default("MEMBER"),
+  tenantId: integer("tenant_id").references(() => tenants.id),
   createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
 // ---------- Tenancies ----------
@@ -270,4 +271,100 @@ export const documents = pgTable("documents", {
   uploadedById: integer("uploaded_by_id").references(() => users.id),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+// ---------- UPI Mappings ----------
+// Maps UPI IDs to properties/tenants for automatic payment matching
+export const upiMappings = pgTable("upi_mappings", {
+  id: serial("id").primaryKey(),
+  upiId: text("upi_id").notNull().unique(),
+  propertyId: integer("property_id")
+    .notNull()
+    .references(() => properties.id, { onDelete: "cascade" }),
+  tenantId: integer("tenant_id")
+    .notNull()
+    .references(() => tenants.id, { onDelete: "cascade" }),
+  isVerified: boolean("is_verified").notNull().default(false),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+// ---------- Payment Submissions ----------
+// Tracks rent payment submissions from tenants (via WhatsApp/image upload)
+export const paymentSubmissions = pgTable("payment_submissions", {
+  id: serial("id").primaryKey(),
+  tenantId: integer("tenant_id")
+    .notNull()
+    .references(() => tenants.id, { onDelete: "cascade" }),
+  propertyId: integer("property_id")
+    .notNull()
+    .references(() => properties.id, { onDelete: "cascade" }),
+  amount: numeric("amount", { precision: 12, scale: 2 }).notNull(),
+  date: date("date").notNull(),
+  transactionId: text("transaction_id"),
+  bank: text("bank"),
+  upiId: text("upi_id"),
+  rawMessage: text("raw_message"),
+  imageUrl: text("image_url"),
+  parsedData: text("parsed_data"), // JSON string
+  confidenceScore: integer("confidence_score"),
+  status: text("status").notNull().default("PENDING"), // PENDING, APPROVED, REJECTED
+  reviewedById: integer("reviewed_by_id").references(() => users.id, { onDelete: "set null" }),
+  reviewedAt: timestamp("reviewed_at"),
+  rentEntryId: integer("rent_entry_id"), // Link to created rent entry
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+// ---------- Relations ----------
+// Required for Drizzle ORM `with:` queries to work
+
+export const paymentSubmissionsRelations = relations(paymentSubmissions, ({ one }) => ({
+  tenant: one(tenants, {
+    fields: [paymentSubmissions.tenantId],
+    references: [tenants.id],
+  }),
+  property: one(properties, {
+    fields: [paymentSubmissions.propertyId],
+    references: [properties.id],
+  }),
+  reviewedBy: one(users, {
+    fields: [paymentSubmissions.reviewedById],
+    references: [users.id],
+  }),
+}));
+
+export const tenantsRelations = relations(tenants, ({ many }) => ({
+  paymentSubmissions: many(paymentSubmissions),
+}));
+
+export const propertiesRelations = relations(properties, ({ many }) => ({
+  paymentSubmissions: many(paymentSubmissions),
+}));
+
+export const usersRelations = relations(users, ({ many }) => ({
+  reviewedSubmissions: many(paymentSubmissions),
+}));
+
+export const upiMappingsRelations = relations(upiMappings, ({ one }) => ({
+  property: one(properties, {
+    fields: [upiMappings.propertyId],
+    references: [properties.id],
+  }),
+  tenant: one(tenants, {
+    fields: [upiMappings.tenantId],
+    references: [tenants.id],
+  }),
+}));
+
+// ---------- Parsing Logs ----------
+// Logs parsing attempts for improving accuracy
+export const parsingLogs = pgTable("parsing_logs", {
+  id: serial("id").primaryKey(),
+  rawInput: text("raw_input").notNull(),
+  parsedResult: text("parsed_result"), // JSON string
+  success: boolean("success").notNull(),
+  errorMessage: text("error_message"),
+  parserVersion: text("parser_version").notNull().default("1.0.0"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
