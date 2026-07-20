@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Building2, Users, TrendingUp, TrendingDown,
-  BarChart3, FileText, Settings, Landmark, Activity,
+  BarChart3, FileText, Settings, Landmark, Activity, Upload, CheckCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -24,11 +24,13 @@ const NAV_ITEMS: SidebarItem[] = [
   { href: "/reports", label: "Reports", icon: BarChart3 },
   { href: "/activity", label: "Activity", icon: Activity, adminOnly: true },
   { href: "/documents", label: "Documents", icon: FileText },
+  { href: "/admin/payment-review", label: "Payment Review", icon: CheckCircle, adminOnly: true },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
 const TENANT_NAV_ITEMS: SidebarItem[] = [
   { href: "/tenant", label: "My property", icon: LayoutDashboard },
+  { href: "/tenant/submit-payment", label: "Submit Payment", icon: Upload },
   { href: "/documents", label: "Documents", icon: FileText },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
@@ -64,7 +66,11 @@ export function Sidebar({
         {(role === "TENANT" ? TENANT_NAV_ITEMS : NAV_ITEMS)
           .filter((item) => !item.adminOnly || role === "ADMIN")
           .map((item) => {
-            const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+            const active = item.href === "/" 
+              ? pathname === "/" 
+              : item.href === "/tenant"
+                ? pathname === "/tenant"
+                : pathname === item.href || (pathname.startsWith(`${item.href}/`) && !pathname.startsWith(`${item.href}/-`));
             const Icon = item.icon;
             return (
               <Link

@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { EntryFormDialog } from "@/components/ledger/entry-form-dialog";
 import { formatINR } from "@/lib/utils";
+import { Upload } from "lucide-react";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
@@ -41,7 +43,7 @@ export default async function TenantPortalPage() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
+        <Card className="sm:col-span-2 lg:col-span-1">
           <CardHeader>
             <CardTitle>Property assigned</CardTitle>
           </CardHeader>
@@ -72,13 +74,20 @@ export default async function TenantPortalPage() {
             </p>
           </CardContent>
         </Card>
-        <Card>
+        <Card className={pendingActions.length > 0 ? "border-orange-500 dark:border-orange-600 bg-orange-100/50 dark:bg-orange-950/20" : ""}>
           <CardHeader>
             <CardTitle>Pending actions</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-lg font-semibold text-foreground">{pendingActions.length}</p>
-            <p className="text-sm text-foreground-soft">items awaiting review</p>
+            <div className="flex items-baseline gap-2">
+              <p className="text-3xl font-bold text-foreground">{pendingActions.length}</p>
+              {pendingActions.length > 0 && (
+                <span className="inline-flex items-center justify-center px-2 py-0.5 rounded-full bg-orange-200 dark:bg-orange-800/40 text-orange-900 dark:text-orange-100 text-xs font-semibold">
+                  needs attention
+                </span>
+              )}
+            </div>
+            <p className="text-sm text-foreground-soft mt-1">items awaiting review</p>
           </CardContent>
         </Card>
       </div>
@@ -86,7 +95,17 @@ export default async function TenantPortalPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>My property</CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle>My property</CardTitle>
+              {property && (
+                <Button asChild size="sm">
+                  <Link href="/tenant/submit-payment">
+                    <Upload className="mr-2 h-4 w-4" />
+                    Submit Payment
+                  </Link>
+                </Button>
+              )}
+            </div>
           </CardHeader>
           <CardContent>
             {property ? (
@@ -124,9 +143,16 @@ export default async function TenantPortalPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className={pendingActions.length > 0 ? "border-orange-400 dark:border-orange-700" : ""}>
           <CardHeader>
-            <CardTitle>Pending actions</CardTitle>
+            <div className="flex items-center gap-2">
+              <CardTitle>Pending actions</CardTitle>
+              {pendingActions.length > 0 && (
+                <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-orange-200 dark:bg-orange-800/40 text-orange-900 dark:text-orange-100 text-xs font-semibold">
+                  {pendingActions.length}
+                </span>
+              )}
+            </div>
           </CardHeader>
           <CardContent>
             {pendingActions.length === 0 ? (
@@ -134,11 +160,25 @@ export default async function TenantPortalPage() {
                 No pending actions right now. Your account is up to date.
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {pendingActions.map((action) => (
-                  <div key={action.id} className="rounded-2xl border border-border p-4">
-                    <p className="font-semibold text-foreground">{action.title}</p>
-                    <p className="text-sm text-foreground-soft mt-1">{action.description}</p>
+                  <div
+                    key={action.id}
+                    className={`rounded-2xl border p-4 ${
+                      action.tone === "overdue"
+                        ? "border-red-300 bg-red-50 dark:border-red-700 dark:bg-red-950/30"
+                        : "border-orange-300 bg-orange-50 dark:border-orange-700 dark:bg-orange-950/30"
+                    }`}
+                  >
+                    <div className="flex items-start gap-2">
+                      <div className={`mt-0.5 h-2 w-2 rounded-full ${
+                        action.tone === "overdue" ? "bg-red-600" : "bg-orange-600"
+                      }`} />
+                      <div className="flex-1">
+                        <p className="font-semibold text-foreground">{action.title}</p>
+                        <p className="text-sm text-foreground-soft mt-1">{action.description}</p>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>

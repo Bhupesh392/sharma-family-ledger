@@ -13,6 +13,7 @@ import {
   activityLog,
   pageViews,
   documents,
+  paymentSubmissions,
 } from "@/lib/db/schema";
 import { and, desc, eq } from "drizzle-orm";
 
@@ -416,6 +417,26 @@ export async function getTenantPortalData(tenantId: number) {
     .orderBy(desc(documents.createdAt));
 
   const pendingActions: Notification[] = [];
+
+  // Check for rejected payment submissions
+  const rejectedPayments = await db
+    .select()
+    .from(paymentSubmissions)
+    .where(and(
+      eq(paymentSubmissions.tenantId, tenantId),
+      eq(paymentSubmissions.status, "REJECTED")
+    ))
+    .orderBy(desc(paymentSubmissions.createdAt))
+    .limit(5);
+
+  for (const payment of rejectedPayments) {
+    pendingActions.push({
+      id: `payment-rejected-${payment.id}`,
+      title: "Payment was rejected",
+      description: `Your payment of ₹${payment.amount} was rejected by the admin. Please resubmit with correct details.`,
+      tone: "overdue",
+    });
+  }
   const currentMonth = new Date().toISOString().slice(0, 7) + "-01";
 
   if (property) {
